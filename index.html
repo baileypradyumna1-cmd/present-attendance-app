@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Present</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: ledger-style cards on a cool paper plane, a blue-book ink accent, red-pen warnings, sticky header over a tab rail. */
+:root {
+  color-scheme: light;
+  --bg: #f1f3f7; --surface: #ffffff; --surface-2: #e8ecf2; --surface-3: #f6f8fb;
+  --line: #dbe1ea; --line-2: #c3ccd9;
+  --ink: #0e1a2e; --ink-2: #44536a; --ink-3: #627087;
+  --accent: #2240c0; --accent-ink: #ffffff; --accent-soft: #e6ebfc;
+  --good-soft: #e4f6e4;
+  --warn: #fab219; --warn-text: #7a5000; --warn-soft: #fff1cc;
+  --bad: #d03b3b; --bad-text: #b32222; --bad-soft: #fde9e9;
+  --shadow: 0 1px 2px rgba(14, 26, 46, .05), 0 6px 18px rgba(14, 26, 46, .05);
+  --sc0: #2a78d6; --sc1: #eb6834; --sc2: #1baf7a; --sc3: #e87ba4; --sc4: #6250d6; --sc5: #c98500; --sc6: #1b9ac9; --sc7: #8a8f2a;
+  --ty-holiday-bg: #ffefc7; --ty-holiday-fg: #7a4b00;
+  --ty-declared-bg: #ffdfcb; --ty-declared-fg: #8a3a0b;
+  --ty-test-bg: #e8e3ff; --ty-test-fg: #4a39b3;
+  --ty-labtest-bg: #fbe1ee; --ty-labtest-fg: #972152;
+  --ty-event-bg: #d5f1e8; --ty-event-fg: #0b6650;
+  --ty-info-bg: #dcedfa; --ty-info-fg: #12588a;
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0b1017; --surface: #131a24; --surface-2: #1d2634; --surface-3: #101722;
+    --line: #243042; --line-2: #34435a;
+    --ink: #e9eef5; --ink-2: #a8b4c5; --ink-3: #8794a8;
+    --accent: #8fa3ff; --accent-ink: #0b1017; --accent-soft: #1b2447;
+    --good-soft: #11301a;
+    --warn: #fab219; --warn-text: #f6c453; --warn-soft: #3a2d0c;
+    --bad: #d84a4a; --bad-text: #ff9090; --bad-soft: #3b1819;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 18px rgba(0, 0, 0, .3);
+    --sc0: #3987e5; --sc1: #d95926; --sc2: #199e70; --sc3: #d55181; --sc4: #9085e9; --sc5: #eda100; --sc6: #35b0e0; --sc7: #a6ab3d;
+    --ty-holiday-bg: rgba(250, 178, 25, .16); --ty-holiday-fg: #f6c968;
+    --ty-declared-bg: rgba(236, 131, 90, .18); --ty-declared-fg: #f3a583;
+    --ty-test-bg: rgba(144, 133, 233, .2); --ty-test-fg: #b9b0f5;
+    --ty-labtest-bg: rgba(232, 123, 164, .18); --ty-labtest-fg: #f2a0c0;
+    --ty-event-bg: rgba(27, 175, 122, .18); --ty-event-fg: #67d4ae;
+    --ty-info-bg: rgba(57, 135, 229, .18); --ty-info-fg: #8fbdf3;
+  }
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0b1017; --surface: #131a24; --surface-2: #1d2634; --surface-3: #101722;
+    --line: #243042; --line-2: #34435a;
+    --ink: #e9eef5; --ink-2: #a8b4c5; --ink-3: #8794a8;
+    --accent: #8fa3ff; --accent-ink: #0b1017; --accent-soft: #1b2447;
+    --good-soft: #11301a;
+    --warn: #fab219; --warn-text: #f6c453; --warn-soft: #3a2d0c;
+    --bad: #d84a4a; --bad-text: #ff9090; --bad-soft: #3b1819;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 18px rgba(0, 0, 0, .3);
+    --sc0: #3987e5; --sc1: #d95926; --sc2: #199e70; --sc3: #d55181; --sc4: #9085e9; --sc5: #eda100; --sc6: #35b0e0; --sc7: #a6ab3d;
+    --ty-holiday-bg: rgba(250, 178, 25, .16); --ty-holiday-fg: #f6c968;
+    --ty-declared-bg: rgba(236, 131, 90, .18); --ty-declared-fg: #f3a583;
+    --ty-test-bg: rgba(144, 133, 233, .2); --ty-test-fg: #b9b0f5;
+    --ty-labtest-bg: rgba(232, 123, 164, .18); --ty-labtest-fg: #f2a0c0;
+    --ty-event-bg: rgba(27, 175, 122, .18); --ty-event-fg: #67d4ae;
+    --ty-info-bg: rgba(57, 135, 229, .18); --ty-info-fg: #8fbdf3;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 var(--body); }
+h1, h2, h3, h4 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+.muted { color: var(--ink-2); }
+.small { font-size: 12.5px; }
+.num { font-variant-numeric: tabular-nums; }
+sup { font-size: 10px; color: var(--ink-3); margin-left: 2px; }
+.ic { flex: none; }
+
+/* header */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top-in { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 10px; padding-bottom: 6px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 700 22px var(--display); letter-spacing: -.02em; }
+.brand svg { width: 30px; height: 30px; }
+.ctrls { display: flex; align-items: center; gap: 10px; }
+.ctl { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+.ctl .in { width: 74px; }
+.btn.icon { width: 38px; padding: 0; justify-content: center; }
+.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; padding-top: 0; padding-bottom: 0; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 13px; font: 600 14px var(--body); color: var(--ink-2); }
+.tabs button:hover { color: var(--ink); }
+.tabs button.on { color: var(--accent); border-bottom-color: var(--accent); }
+main.wrap { padding-top: 24px; padding-bottom: 28px; }
+.foot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding-bottom: 36px; font-size: 12.5px; color: var(--ink-3); }
+.save-chip { padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); font-weight: 600; }
+.save-chip.warn { background: var(--warn-soft); color: var(--warn-text); }
+
+/* primitives */
+.stack { display: flex; flex-direction: column; gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.pad { padding: 18px 20px; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 14px; }
+.sec-head h2 { font-size: 19px; }
+.eyebrow { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.row-end { display: flex; justify-content: flex-end; margin-top: 14px; }
+.btn { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.1); background: var(--accent); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--surface-2); }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
+.btn.danger-o { color: var(--bad-text); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.btn.sm { height: 32px; padding: 0 11px; font-size: 13px; }
+.btn.xs { height: 26px; width: 26px; padding: 0; justify-content: center; }
+.btn:disabled { opacity: .4; cursor: default; }
+.in { width: 100%; height: 38px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--surface); color: var(--ink); }
+.in.sm { height: 34px; font-size: 13px; padding: 0 8px; }
+.in.xs { height: 28px; font-size: 12px; padding: 0 6px; }
+.in::placeholder { color: var(--ink-3); }
+select.in { padding-right: 6px; }
+.fld { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fld > label, label.fld { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.fld.grow { flex: 1 1 240px; }
+.sdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--accent)); margin-right: 7px; flex: none; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 7px; border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.badge .ic { width: 13px; height: 13px; }
+.badge.ok { background: var(--accent-soft); color: var(--accent); }
+.badge.edge { background: var(--warn-soft); color: var(--warn-text); }
+.badge.below { background: var(--bad-soft); color: var(--bad-text); }
+.badge.none { background: var(--surface-2); color: var(--ink-2); }
+.tchip { display: inline-flex; align-items: center; font: 500 11px var(--mono); padding: 2px 7px; border-radius: 6px; background: var(--tb, var(--surface-2)); color: var(--tf, var(--ink-2)); white-space: nowrap; }
+.ty-holiday { --tb: var(--ty-holiday-bg); --tf: var(--ty-holiday-fg); }
+.ty-declared { --tb: var(--ty-declared-bg); --tf: var(--ty-declared-fg); }
+.ty-test { --tb: var(--ty-test-bg); --tf: var(--ty-test-fg); }
+.ty-labtest { --tb: var(--ty-labtest-bg); --tf: var(--ty-labtest-fg); }
+.ty-event { --tb: var(--ty-event-bg); --tf: var(--ty-event-fg); }
+.ty-info { --tb: var(--ty-info-bg); --tf: var(--ty-info-fg); }
+.ty-none { --tf: var(--ink-3); }
+.today-chip { background: var(--accent); color: var(--accent-ink); font-family: var(--body); font-weight: 600; }
+.ttchip { background: var(--surface-2); color: var(--ink-2); }
+
+/* dashboard */
+.hero { display: grid; grid-template-columns: 176px minmax(0, 1fr) 270px; gap: 26px; align-items: center; padding: 22px 24px; }
+.hero-ring { position: relative; width: 176px; height: 176px; }
+.ring-svg { width: 100%; height: 100%; --fill: var(--accent); --track: var(--accent-soft); }
+.ring-svg.st-edge { --fill: var(--warn); --track: var(--warn-soft); }
+.ring-svg.st-below { --fill: var(--bad); --track: var(--bad-soft); }
+.ring-svg.st-none { --fill: var(--line-2); --track: var(--surface-2); }
+.ring-track { fill: none; stroke: var(--track); stroke-width: 12; }
+.ring-fill { fill: none; stroke: var(--fill); stroke-width: 12; stroke-linecap: round; }
+.ring-tick { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+.hero-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hero-num b { font: 700 40px/1 var(--display); letter-spacing: -.03em; white-space: nowrap; }
+.hero-num small { font-size: 18px; font-weight: 600; margin-left: 1px; }
+.hero-num span { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+.hero-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.hero-line { font-size: 24px; }
+.hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.hero-adv { font-weight: 500; }
+.hero-side { display: flex; flex-direction: column; gap: 12px; padding-left: 24px; border-left: 1px solid var(--line); }
+.asof { display: flex; flex-direction: column; gap: 6px; }
+.asof label { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.asof-row { display: flex; flex-direction: column; gap: 8px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.stat span { font-size: 12.5px; color: var(--ink-2); }
+.stat b { font: 700 26px/1.15 var(--display); letter-spacing: -.02em; }
+.stat b small { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.stat.big { background: var(--accent-soft); border-color: transparent; }
+.stat.big b { color: var(--accent); font-size: 34px; }
+.alerts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.al { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
+.al .ic { margin-top: 3px; }
+.al.below { background: var(--bad-soft); color: var(--ink); box-shadow: inset 3px 0 0 var(--bad); }
+.al.below .ic { color: var(--bad-text); }
+.al.edge { background: var(--warn-soft); box-shadow: inset 3px 0 0 var(--warn); }
+.al.edge .ic { color: var(--warn-text); }
+.alert-ok { display: flex; align-items: center; gap: 8px; color: var(--ink-2); }
+.alert-ok .ic { color: var(--accent); }
+.subj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(262px, 1fr)); gap: 14px; }
+.subj { padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.subj header { display: flex; align-items: flex-start; gap: 0; }
+.subj header .sdot { margin-top: 7px; }
+.subj-t { flex: 1; min-width: 0; }
+.subj-t h3 { font-size: 17px; }
+.subj-t p { font-size: 12.5px; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.subj-pct { font: 700 28px/1 var(--display); letter-spacing: -.02em; }
+.subj-pct small { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.meter { position: relative; height: 10px; border-radius: 999px; background: var(--trk); margin: 4px 0 16px; --fill: var(--accent); --trk: var(--accent-soft); }
+.meter.st-edge { --fill: var(--warn); --trk: var(--warn-soft); }
+.meter.st-below { --fill: var(--bad); --trk: var(--bad-soft); }
+.meter.st-none { --fill: var(--line-2); --trk: var(--surface-2); }
+.meter-fill { height: 100%; border-radius: 999px; background: var(--fill); }
+.meter-tick { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); transform: translateX(-1px); border-radius: 1px; }
+.meter-tick span { position: absolute; top: calc(100% + 1px); left: 50%; transform: translateX(-50%); font: 500 10px var(--body); color: var(--ink-2); }
+.subj-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+.advice { font-size: 13px; color: var(--ink-2); }
+
+/* attendance list */
+.seg { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px; }
+.seg button { border: 1px solid var(--line-2); background: var(--surface); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 13.5px; color: var(--ink-2); }
+.seg button small { font-weight: 500; color: var(--ink-3); }
+.seg button.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.seg button.on small { color: inherit; opacity: .8; }
+.days { display: flex; flex-direction: column; gap: 8px; }
+.day { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); scroll-margin-top: 130px; }
+.day.is-today { border-color: var(--accent); }
+.day.open { box-shadow: var(--shadow); }
+.day.off .day-head { opacity: .85; }
+.day-head { width: 100%; display: grid; grid-template-columns: 50px minmax(0, 1fr) auto 18px; gap: 12px; align-items: center; background: none; border: 0; padding: 10px 14px; text-align: left; }
+.dnum { display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.dnum b { font: 700 21px var(--display); }
+.dnum small { font-size: 11px; color: var(--ink-2); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.dtitle { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; min-width: 0; }
+.dl { font-weight: 600; }
+.dsum { font-size: 13px; text-align: right; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 2px; align-items: center; }
+.dsum .abs { color: var(--bad-text); font-weight: 600; }
+.sep { display: inline-block; width: 3px; height: 3px; border-radius: 50%; background: var(--ink-3); margin: 0 7px; }
+.chev { transition: transform .15s; color: var(--ink-3); }
+.day.open .chev { transform: rotate(180deg); }
+.day-body { padding: 2px 14px 16px; border-top: 1px solid var(--line); }
+.de { display: flex; flex-direction: column; gap: 14px; padding-top: 14px; }
+.de-top { display: flex; flex-wrap: wrap; gap: 12px; }
+.de-top .fld:not(.grow) { flex: 0 1 250px; min-width: 190px; }
+.de-note, .de-off { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: var(--ink-2); padding: 9px 12px; border-radius: 10px; background: var(--surface-3); border: 1px solid var(--line); }
+.de-note .ic, .de-off .ic { margin-top: 2px; color: var(--ink-3); }
+.de-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.chk-line { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
+.chk-line.big { font-weight: 600; font-size: 15px; }
+input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; flex: none; margin: 0; border: 2px solid var(--line-2); border-radius: 7px; background: var(--surface) center/14px no-repeat; cursor: pointer; }
+input[type="checkbox"]:checked { background-color: var(--accent); border-color: var(--accent); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-6.5'/%3E%3C/svg%3E"); }
+input[type="checkbox"]:disabled { opacity: .35; cursor: default; }
+.cls-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.cls { display: grid; grid-template-columns: 30px 104px minmax(0, 1fr) auto; column-gap: 10px; row-gap: 4px; align-items: center; padding: 8px 10px; border-radius: 10px; background: var(--surface-3); border: 1px solid transparent; }
+.cls.absent { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 30%, transparent); }
+.cls.replaced { background: var(--accent-soft); }
+.cls.cancelled { background: var(--surface-2); }
+.cls.cancelled .what { text-decoration: line-through; color: var(--ink-3); }
+.cls.none { background: transparent; border-style: dashed; border-color: var(--line); }
+.chk { display: flex; }
+.chk-ph { width: 22px; height: 22px; display: grid; place-items: center; color: var(--accent); }
+.when { display: flex; flex-direction: column; line-height: 1.2; }
+.when b { font: 600 13px var(--mono); }
+.when small { font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.what { display: flex; align-items: center; min-width: 0; gap: 0; }
+.what b { margin-right: 8px; }
+.nm { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.stat-sel { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.stat-sel .in { width: auto; min-width: 150px; }
+.hint { grid-column: 2 / -1; font-size: 12px; color: var(--ink-2); }
+.brk { text-align: center; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding: 2px 0; display: flex; align-items: center; gap: 10px; }
+.brk::before, .brk::after { content: ""; flex: 1; border-top: 1px dashed var(--line-2); }
+.de-extra { border-top: 1px dashed var(--line-2); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.de-extra h4 { font-size: 14px; }
+.ex-row { display: flex; align-items: center; gap: 14px; }
+.ex-s { display: flex; align-items: center; font-weight: 600; min-width: 90px; }
+.ex-add { display: flex; gap: 8px; flex-wrap: wrap; }
+.ex-add .in { width: 170px; }
+.de-move summary { cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13.5px; color: var(--accent); }
+.de-move[open] summary { margin-bottom: 10px; }
+.mv-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.mv-row .in { width: 170px; }
+.mv-row label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
+/* calendar */
+.legend { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--ink-2); }
+.legend li { display: flex; align-items: center; gap: 7px; }
+.legend-note { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.cal-scroll { overflow-x: auto; }
+.cal { min-width: 340px; display: flex; flex-direction: column; gap: 4px; }
+.cal-row { display: grid; grid-template-columns: 46px repeat(7, minmax(0, 1fr)) 40px; gap: 4px; align-items: stretch; }
+.cal-row.head { font-size: 12px; font-weight: 600; color: var(--ink-2); text-align: center; position: sticky; top: 0; }
+.cal-wk { display: flex; flex-direction: column; justify-content: center; line-height: 1.15; font-size: 11px; color: var(--ink-3); text-align: left; }
+.cal-wk b { font: 600 14px var(--display); color: var(--ink-2); }
+.cal-row.head .cal-wk { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.cal-ct { display: grid; place-items: center; font: 600 13px var(--display); color: var(--ink-2); }
+.cal-day { position: relative; min-height: 54px; border: 1px solid var(--line); border-radius: 9px; background: var(--tb, var(--surface)); color: var(--ink); padding: 5px 6px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; gap: 2px; }
+.cal-day.empty { border: 0; background: none; }
+.cal-day:not(.empty):hover { border-color: var(--accent); }
+.cal-day.sun { background: var(--surface-3); color: var(--ink-3); }
+.cal-day.today { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cal-day .n { font: 600 14px var(--display); display: flex; align-items: baseline; gap: 4px; }
+.cal-day .n em { font: 500 10px var(--body); color: var(--tf, var(--ink-3)); text-transform: uppercase; }
+.cal-day .cc { font: 600 10.5px var(--mono); color: var(--tf, var(--ink-2)); }
+.cal-day .ttm { position: absolute; right: 5px; bottom: 5px; font: 500 9.5px var(--body); color: var(--ink-2); }
+.mk { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; }
+.mk.abs { background: var(--bad); }
+.mk.chg { background: var(--accent); }
+.cal-day .mk { position: absolute; top: 6px; right: 6px; }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tbl th, .tbl td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.tbl thead th { font-size: 12px; font-weight: 600; color: var(--ink-2); background: var(--surface-3); white-space: nowrap; }
+.tbl thead th small { display: block; font-weight: 500; color: var(--ink-3); }
+.tbl .r { text-align: right; }
+.tbl th.l, .tbl td.l { text-align: left; }
+.tbl tbody th { font-weight: 600; }
+.tbl .diff { color: var(--warn-text); font-weight: 700; }
+.tbl .grp { text-align: center; border-left: 1px solid var(--line); }
+.tbl .res { background: var(--surface-3); }
+.tbl.marks th, .tbl.marks td { padding-left: 7px; padding-right: 7px; }
+.tbl.marks th.l small { font-weight: 500; color: var(--ink-2); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.subj-cell { display: flex; align-items: center; }
+.subj-cell > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.subj-cell small { display: block; font-size: 12px; color: var(--ink-2); font-weight: 500; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-in { width: 58px; height: 34px; padding: 0 6px; text-align: right; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface); color: var(--ink); font-variant-numeric: tabular-nums; }
+.mk-in.bad { border-color: var(--bad); background: var(--bad-soft); }
+.out { font-weight: 500; }
+.formula { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: var(--ink-2); max-width: 82ch; }
+.formula b { color: var(--ink); }
+.tg-controls { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+.tg-controls .fld { flex: 1 1 200px; max-width: 320px; }
+.tg-sum { margin-bottom: 12px; padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); }
+#tg-a .small { margin-top: 10px; }
+
+/* timetable editor */
+.sub-row { display: flex; align-items: flex-end; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.sub-row:first-child { padding-top: 0; }
+.sub-ord { display: flex; flex-direction: column; gap: 2px; }
+.sub-fields { flex: 1; min-width: 0; display: grid; grid-template-columns: 96px minmax(180px, 2fr) minmax(120px, 1fr) minmax(130px, 1fr) 92px; gap: 10px; }
+.sub-row .del { margin-bottom: 2px; }
+.tt-scroll { overflow-x: auto; padding-bottom: 6px; }
+.tt { border-collapse: separate; border-spacing: 0; min-width: 980px; width: 100%; }
+.tt th, .tt td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; min-width: 128px; }
+.tt thead th { background: var(--surface-3); }
+.tt th.l { min-width: 96px; font-size: 13px; }
+.p-head { display: flex; flex-direction: column; gap: 5px; }
+.p-btns { display: flex; gap: 2px; }
+.tt td { display: table-cell; }
+.tt td > * + * { margin-top: 5px; }
+.bt { display: flex; align-items: center; gap: 6px; }
+.bt > span { font: 600 11.5px var(--mono); width: 26px; color: var(--ink-2); }
+
+/* export */
+.exp-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.file-btn { position: relative; cursor: pointer; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.paper-wrap { overflow-x: auto; background: var(--surface-2); padding: 16px; border-radius: 10px; }
+.paper { background: #fff; color: #0e1a2e; border: 1px solid #cfd6e0; border-radius: 4px; padding: 24px 26px; font-size: 12.5px; line-height: 1.45; min-width: 640px; max-width: 820px; margin: 0 auto; box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.paper h3 { font-size: 20px; }
+.paper .who { font-size: 14px; margin-top: 4px; }
+.paper .meta { color: #44536a; margin-bottom: 4px; }
+.paper h4 { font-size: 13px; color: #2240c0; margin: 18px 0 6px; padding-bottom: 4px; border-bottom: 1.5px solid #2240c0; }
+.paper table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.paper th, .paper td { padding: 5px 7px; text-align: left; border-bottom: 1px solid #e3e8ef; vertical-align: top; }
+.paper th { font-size: 11px; color: #44536a; background: #eef1f6; }
+.paper .r { text-align: right; }
+.paper .tot td { font-weight: 700; background: #f6f8fb; }
+.paper .st-below { color: #b32222; font-weight: 600; }
+.paper .st-edge { color: #7a5000; font-weight: 600; }
+.paper .st-ok { color: #2240c0; font-weight: 600; }
+.paper .cg { margin-top: 10px; font-size: 14px; }
+.paper .muted { color: #5a6a80; }
+
+/* feedback */
+#toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 60; max-width: calc(100vw - 32px); box-shadow: var(--shadow); }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; }
+#modal[hidden] { display: none; }
+.scrim { position: absolute; inset: 0; background: rgba(8, 12, 20, .55); }
+.dlg { position: relative; width: min(440px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; box-shadow: 0 20px 60px rgba(0, 0, 0, .35); display: flex; flex-direction: column; gap: 10px; }
+.dlg h3 { font-size: 19px; }
+.dlg p { color: var(--ink-2); }
+.dlg-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+/* responsive */
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 160px minmax(0, 1fr); }
+  .hero-ring { width: 160px; height: 160px; }
+  .hero-side { grid-column: 1 / -1; padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .sub-fields { grid-template-columns: 1fr 1fr; }
+  .sub-fields .nm { grid-column: 1 / -1; order: -1; }
+}
+@media (max-width: 640px) {
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .top-in { flex-wrap: wrap; }
+  .ctl span { display: none; }
+  .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; padding: 20px 18px; }
+  .hero-main { align-items: center; }
+  .hero-badges { justify-content: center; }
+  .hero-side { width: 100%; text-align: left; }
+  .hero-line { font-size: 21px; }
+  .hero-num b { font-size: 36px; }
+  .pad { padding: 16px 14px; }
+  .day-head { grid-template-columns: 44px minmax(0, 1fr) 18px; }
+  .dsum { grid-column: 2; grid-row: 2; justify-content: flex-start; }
+  .day-head .chev { grid-column: 3; grid-row: 1; }
+  .cls { grid-template-columns: 30px minmax(0, 1fr); }
+  .cls .when { grid-column: 2; flex-direction: row; gap: 8px; align-items: baseline; }
+  .cls .what, .cls .stat-sel { grid-column: 2; justify-content: flex-start; }
+  .cls .chk, .cls .chk-ph { grid-row: 1 / span 2; }
+  .cls .stat-sel .in { min-width: 0; flex: 1 1 140px; }
+  .hint { grid-column: 2; }
+  .cal-row { grid-template-columns: 34px repeat(7, minmax(0, 1fr)) 24px; gap: 3px; }
+  .cal-day { min-height: 46px; padding: 4px; border-radius: 7px; }
+  .cal-day .ttm { display: none; }
+  .cal-day .n { font-size: 13px; }
+  .cal-day .n em { display: none; }
+  .cal-day .cc { font-size: 9px; }
+  .sub-row { flex-wrap: wrap; }
+  .sub-fields { grid-template-columns: 1fr 1fr; }
+  .sub-ord { flex-direction: row; }
+  .ex-row { flex-wrap: wrap; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#dashboard" aria-label="Present, attendance and marks">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><path d="M9 16.5l4.8 4.8L23.5 11" fill="none" stroke="var(--accent-ink)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Present</span>
+    </a>
+    <div class="ctrls">
+      <label class="ctl"><span>Batch</span><select id="batch-sel" class="in sm" data-act="batch" aria-label="Your lab batch"></select></label>
+      <label class="ctl"><span>Minimum %</span><input id="thr" class="in sm" type="number" min="1" max="100" step="1" data-act="thr" aria-label="Minimum attendance percentage"></label>
+      <button id="theme-btn" class="btn icon" data-act="theme" type="button"></button>
+    </div>
+  </div>
+  <nav class="wrap tabs" aria-label="Sections">
+    <button type="button" data-act="tab" data-tab="dashboard">Dashboard</button>
+    <button type="button" data-act="tab" data-tab="attendance">Attendance</button>
+    <button type="button" data-act="tab" data-tab="calendar">Calendar</button>
+    <button type="button" data-act="tab" data-tab="marks">Marks</button>
+    <button type="button" data-act="tab" data-tab="targets">Targets</button>
+    <button type="button" data-act="tab" data-tab="timetable">Timetable</button>
+    <button type="button" data-act="tab" data-tab="export">Export</button>
+  </nav>
+</header>
+<main class="wrap" id="view"></main>
+<footer class="wrap foot"><span id="save-chip" class="save-chip"></span><span>Hour-wise attendance, internal marks and CGPA for your semester.</span></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal" hidden></div>
+<script>
+'use strict';
+/* =====================================================================
+   Present: data + calculation engine (pure functions, no DOM)
+   ===================================================================== */
+
+/* ---------- constants ---------- */
+const RANGE_START = '2026-08-31';
+const RANGE_END = '2027-01-01';
+// Totals printed on the college calendar, kept for the "calendar check" card.
+const COLLEGE = { working: 91, teaching: 77, byDay: [16, 15, 15, 16, 15] };
+const WD = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WDL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/* kind: class = timetable classes run, off = whole day ignored, event = college programme (full credit if you attended) */
+const TYPES = {
+  regular:  { label: 'Regular day',                   code: '',    kind: 'class' },
+  holiday:  { label: 'Holiday',                       code: 'H',   kind: 'off' },
+  declared: { label: 'Declared holiday',              code: 'DH',  kind: 'off' },
+  test:     { label: 'Internal test',                 code: 'T',   kind: 'off' },
+  labtest:  { label: 'Lab test',                      code: 'LT',  kind: 'off' },
+  event:    { label: 'College event / programme',     code: 'EV',  kind: 'event' },
+  testatt:  { label: 'Test attendance',               code: 'TA',  kind: 'class' },
+  bluebook: { label: 'Blue book verification',        code: 'BV',  kind: 'class' },
+  asd:      { label: 'Attendance & sessional display', code: 'ASD', kind: 'class' },
+  feedback: { label: 'Faculty feedback',              code: 'FB',  kind: 'class' },
+  noclass:  { label: 'No classes',                    code: '',    kind: 'off' }
+};
+const TYPE_ORDER = ['regular', 'holiday', 'declared', 'test', 'labtest', 'event', 'testatt', 'bluebook', 'asd', 'feedback', 'noclass'];
+
+/* ---------- date helpers (ISO keys: YYYY-MM-DD, local time) ---------- */
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function keyOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function dateOf(k) { const p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function addDays(k, n) { const d = dateOf(k); d.setDate(d.getDate() + n); return keyOf(d); }
+function wd(k) { return (dateOf(k).getDay() + 6) % 7; } // Mon=0 .. Sun=6
+function inRange(k) { return k >= RANGE_START && k <= RANGE_END; }
+function clampKey(k) { return k < RANGE_START ? RANGE_START : (k > RANGE_END ? RANGE_END : k); }
+let _days = null;
+function allDays() {
+  if (_days) return _days;
+  _days = [];
+  for (let k = RANGE_START; k <= RANGE_END; k = addDays(k, 1)) _days.push(k);
+  return _days;
+}
+function fmtDate(k, withYear) {
+  const d = dateOf(k);
+  return WD[wd(k)] + ' ' + d.getDate() + ' ' + MON[d.getMonth()] + (withYear ? ' ' + d.getFullYear() : '');
+}
+
+/* ---------- default subjects, periods, timetable ---------- */
+const DEFAULT_SUBJECTS = [
+  { id: 'maths', short: 'MATHS', code: '25BMAME101', name: 'Differential Calculus & Linear Algebra', faculty: 'Dr. Venkataramana B S', credits: 1, color: 0 },
+  { id: 'chem', short: 'CHEM', code: '25BCHME102', name: 'Applied Chemistry for Advanced Metal Protection and Sustainable Energy Systems', faculty: 'Mrs. Shylaja K R', credits: 1, color: 1 },
+  { id: 'ai', short: 'AI', code: '25BETCK103', name: 'Introduction to AI and Applications', faculty: 'Mr. Swaroop Gannamani', credits: 1, color: 2 },
+  { id: 'iem', short: 'IEM', code: '25BESC104G', name: 'Introduction to Engineering Mechanics', faculty: 'Mr. Saviraj A S', credits: 1, color: 3 },
+  { id: 'pp', short: 'PP', code: '25BPLC105A + 25BPLL109A', name: 'Introduction to Python Programming (theory + lab)', faculty: 'Dr. Anil Kumar A', credits: 1, color: 4 },
+  { id: 'eng', short: 'ENG', code: '25BCPSK106', name: 'Communicative & Professional Writing Skills in English', faculty: 'Mrs. Anuradha M V', credits: 1, color: 5 },
+  { id: 'ic', short: 'IC', code: '25BICOK107', name: 'Indian Constitution & Engineering Ethics', faculty: 'Mrs. Anuradha M V', credits: 1, color: 6 },
+  { id: 'idt', short: 'IDT', code: '25BICOK108', name: 'Innovation and Design Thinking Lab (Project-Based Learning)', faculty: 'Mr. Abhishek P', credits: 1, color: 7 }
+];
+const DEFAULT_PERIODS = [
+  { id: 'p1', label: '1', time: '8:30 - 9:25', brk: '' },
+  { id: 'p2', label: '2', time: '9:25 - 10:20', brk: 'Break 10:20 - 10:35' },
+  { id: 'p3', label: '3', time: '10:35 - 11:30', brk: '' },
+  { id: 'p4', label: '4', time: '11:30 - 12:25', brk: 'Lunch 12:25 - 1:15' },
+  { id: 'p5', label: '5', time: '1:15 - 2:10', brk: '' },
+  { id: 'p6', label: '6', time: '2:10 - 3:05', brk: '' },
+  { id: 'p7', label: '7', time: '3:05 - 4:00', brk: '' }
+];
+function _S(id) { return { k: 's', s: id }; }
+function _N(l) { return { k: 'n', l: l }; }
+const _LAB_THU = { k: 'b', m: { K1: 'chem', K2: 'pp' } };
+const _LAB_FRI = { k: 'b', m: { K1: 'pp', K2: 'chem' } };
+/* slot kinds: s = one subject, b = batch-wise lab (batch -> subject), n = not counted (T, LIB, free) */
+const DEFAULT_TT = {
+  0: { p1: _S('ai'), p2: _S('chem'), p3: _S('pp'), p4: _S('maths'), p5: _S('idt'), p6: _S('idt'), p7: _N('T') },
+  1: { p1: _S('pp'), p2: _S('ic'), p3: _S('ai'), p4: _S('chem'), p5: _S('maths'), p6: _S('iem'), p7: _N('LIB') },
+  2: { p1: _S('iem'), p2: _S('maths'), p3: _S('pp'), p4: _S('ai'), p5: _S('ai'), p6: _S('chem'), p7: _N('LIB') },
+  3: { p1: _S('pp'), p2: _S('maths'), p3: _LAB_THU, p4: _LAB_THU, p5: _S('chem'), p6: _S('iem'), p7: _S('eng') },
+  4: { p1: _S('chem'), p2: _S('eng'), p3: _LAB_FRI, p4: _LAB_FRI, p5: _S('maths'), p6: _S('iem'), p7: _N('T') }
+};
+
+/* ---------- the college calendar (Aug 31 2026 to Jan 1 2027) ----------
+   [date, type, label, {code, tt (timetable weekday 0=Mon), note}]  */
+const NOTE_SAT = function (d) { return 'Follows the ' + d + ' timetable (calendar remark).'; };
+const CAL = [
+  ['2026-08-31', 'regular', 'Commencement of classes'],
+  ['2026-09-05', 'holiday', ''],
+  ['2026-09-12', 'regular', '', { tt: 2, note: NOTE_SAT('Wednesday') }],
+  ['2026-09-14', 'holiday', 'Ganesha Chaturthi'],
+  ['2026-09-19', 'declared', ''],
+  ['2026-09-24', 'regular', '', { note: 'The calendar remarks list "First Faculty Feed Back" on this date; the grid itself marks it on 27 Oct.' }],
+  ['2026-09-26', 'regular', '', { tt: 1, note: NOTE_SAT('Tuesday') }],
+  ['2026-10-02', 'holiday', 'Gandhi Jayanthi'],
+  ['2026-10-03', 'declared', ''],
+  ['2026-10-07', 'testatt', 'Test attendance'],
+  ['2026-10-08', 'event', 'AIML Dept Hackathon'],
+  ['2026-10-09', 'event', 'AIML Dept Hackathon'],
+  ['2026-10-10', 'holiday', 'Mahalaya Amavasya'],
+  ['2026-10-14', 'test', 'Internal Test 1', { code: 'T1' }],
+  ['2026-10-15', 'test', 'Internal Test 1', { code: 'T1' }],
+  ['2026-10-16', 'test', 'Internal Test 1', { code: 'T1' }],
+  ['2026-10-17', 'declared', ''],
+  ['2026-10-20', 'holiday', 'Maha Navami & Ayudha Pooja'],
+  ['2026-10-21', 'holiday', 'Vijayadashami'],
+  ['2026-10-24', 'bluebook', 'Blue Book Verification', { tt: 3, note: NOTE_SAT('Thursday') }],
+  ['2026-10-27', 'feedback', 'First Faculty Feed Back', { code: 'FFB1' }],
+  ['2026-10-31', 'regular', '', { tt: 0, note: 'No timetable is printed for this Saturday. The Monday timetable is assumed because that reproduces the college\'s own weekday totals (16/15/15/16/15). Change it below if your class followed another day.' }],
+  ['2026-11-07', 'declared', ''],
+  ['2026-11-10', 'holiday', 'Balipadyami'],
+  ['2026-11-14', 'testatt', 'Test attendance', { tt: 4, note: NOTE_SAT('Friday') }],
+  ['2026-11-18', 'test', 'Internal Test 2', { code: 'T2' }],
+  ['2026-11-19', 'test', 'Internal Test 2', { code: 'T2' }],
+  ['2026-11-20', 'test', 'Internal Test 2', { code: 'T2' }],
+  ['2026-11-21', 'declared', ''],
+  ['2026-11-27', 'holiday', 'Kanakadasa Jayanthi'],
+  ['2026-11-28', 'bluebook', 'Blue Book Verification', { tt: 2, note: NOTE_SAT('Wednesday') }],
+  ['2026-12-01', 'feedback', 'Second Faculty Feed Back', { code: 'FFB2' }],
+  ['2026-12-03', 'testatt', 'Test attendance'],
+  ['2026-12-05', 'holiday', ''],
+  ['2026-12-12', 'regular', '', { tt: 4, note: NOTE_SAT('Friday') }],
+  ['2026-12-18', 'testatt', 'Test attendance'],
+  ['2026-12-19', 'declared', ''],
+  ['2026-12-21', 'test', 'Internal Test 3', { code: 'T3' }],
+  ['2026-12-22', 'test', 'Internal Test 3', { code: 'T3' }],
+  ['2026-12-23', 'test', 'Internal Test 3', { code: 'T3' }],
+  ['2026-12-24', 'labtest', 'Lab test'],
+  ['2026-12-25', 'holiday', 'Christmas'],
+  ['2026-12-26', 'labtest', 'Lab test'],
+  ['2026-12-28', 'labtest', 'Lab test'],
+  ['2026-12-29', 'labtest', 'Lab test'],
+  ['2026-12-30', 'labtest', 'Lab test'],
+  ['2026-12-31', 'asd', 'Attendance & sessional display'],
+  ['2027-01-01', 'regular', 'Last working day']
+];
+const DEF = {};
+CAL.forEach(function (r) {
+  const k = r[0], x = r[3] || {}, w = wd(k);
+  DEF[k] = { type: r[1], label: r[2] || '', code: x.code || '', tt: x.tt !== undefined ? x.tt : (w < 5 ? w : null), note: x.note || '' };
+});
+function getBase(k) {
+  if (DEF[k]) return DEF[k];
+  const w = wd(k);
+  return w >= 5 ? { type: 'noclass', label: '', code: '', tt: null, note: '' } : { type: 'regular', label: '', code: '', tt: w, note: '' };
+}
+
+/* ---------- state ---------- */
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function defaultState() {
+  return {
+    v: 1,
+    profile: { name: '', usn: '', sem: 'Odd semester, 2026-27', college: '' },
+    settings: { threshold: 85, batch: 'K1', batches: ['K1', 'K2'], asOf: 'today', theme: '' },
+    subjects: clone(DEFAULT_SUBJECTS),
+    periods: clone(DEFAULT_PERIODS),
+    tt: clone(DEFAULT_TT),
+    days: {},
+    marks: {},
+    targets: { cgpa: 9, mode: 'ext', exp: 70, pend: 'same', intT: 20, apT: 20 }
+  };
+}
+/* Returns a usable state from untrusted JSON, or null. */
+function sanitizeState(raw) {
+  if (!raw || typeof raw !== 'object' || raw.v !== 1) return null;
+  if (!Array.isArray(raw.subjects) || !Array.isArray(raw.periods) || !raw.tt || typeof raw.tt !== 'object') return null;
+  const d = defaultState();
+  const S = {
+    v: 1,
+    profile: Object.assign(d.profile, raw.profile || {}),
+    settings: Object.assign(d.settings, raw.settings || {}),
+    subjects: raw.subjects.filter(function (s) { return s && typeof s.id === 'string'; }),
+    periods: raw.periods.filter(function (p) { return p && typeof p.id === 'string'; }),
+    tt: raw.tt,
+    days: raw.days && typeof raw.days === 'object' ? raw.days : {},
+    marks: raw.marks && typeof raw.marks === 'object' ? raw.marks : {},
+    targets: Object.assign(d.targets, raw.targets && typeof raw.targets === 'object' ? raw.targets : {})
+  };
+  for (let i = 0; i < 5; i++) if (!S.tt[i] || typeof S.tt[i] !== 'object') S.tt[i] = {};
+  if (!Array.isArray(S.settings.batches) || !S.settings.batches.length) S.settings.batches = ['K1', 'K2'];
+  if (S.settings.batches.indexOf(S.settings.batch) < 0) S.settings.batch = S.settings.batches[0];
+  const t = Number(S.settings.threshold);
+  S.settings.threshold = isFinite(t) && t > 0 && t <= 100 ? t : 85;
+  return S;
+}
+
+/* ---------- effective day ---------- */
+function eff(S, k) {
+  const b = getBase(k), o = S.days[k] || {};
+  const type = (o.type !== undefined && TYPES[o.type]) ? o.type : b.type;
+  const T = TYPES[type];
+  const same = type === b.type;
+  return {
+    key: k, type: type, kind: T.kind,
+    label: o.label !== undefined ? o.label : (same ? b.label : ''),
+    code: o.code !== undefined ? o.code : (same && b.code ? b.code : T.code),
+    tt: o.tt !== undefined ? o.tt : b.tt,
+    att: o.att !== false,
+    slots: o.slots || {},
+    extras: o.extras || [],
+    base: b, ov: o
+  };
+}
+function subjectExists(S, id) { return S.subjects.some(function (s) { return s.id === id; }); }
+function subj(S, id) { for (let i = 0; i < S.subjects.length; i++) if (S.subjects[i].id === id) return S.subjects[i]; return null; }
+function resolveSlot(S, slot) {
+  if (!slot) return null;
+  if (slot.k === 's') return subjectExists(S, slot.s) ? slot.s : null;
+  if (slot.k === 'b') { const id = slot.m && slot.m[S.settings.batch]; return id && subjectExists(S, id) ? id : null; }
+  return null;
+}
+function dayPeriods(S, e) {
+  if (e.tt === null || e.tt === undefined || !S.tt[e.tt]) return [];
+  return S.periods.map(function (p) {
+    const slot = S.tt[e.tt][p.id];
+    return { p: p, slot: slot, subj: resolveSlot(S, slot), st: e.slots[p.id] || null };
+  });
+}
+
+/* ---------- attendance tally ----------
+   Rules (from the brief):
+   - holiday / test / lab test / no-class day: whole day ignored
+   - cancelled class: ignored
+   - class taken by another subject/faculty: credit goes to THAT subject; the scheduled one is untouched
+   - college event day: every counted period is credited if you attended college that day  */
+function tally(S, upto) {
+  const per = {};
+  S.subjects.forEach(function (s) { per[s.id] = { held: 0, att: 0, cancelled: 0, replacedIn: 0, replacedOut: 0 }; });
+  const tot = { held: 0, att: 0, cancelled: 0 };
+  let teachingDays = 0, absentDays = 0;
+  function add(id, present, c) {
+    if (!per[id]) return;
+    per[id].held++; tot.held++; c.held++;
+    if (present) { per[id].att++; tot.att++; c.att++; }
+  }
+  const days = allDays();
+  for (let i = 0; i < days.length; i++) {
+    const k = days[i];
+    if (k > upto) break;
+    const e = eff(S, k), c = { held: 0, att: 0 };
+    if (e.kind !== 'off') {
+      const rows = dayPeriods(S, e);
+      for (let j = 0; j < rows.length; j++) {
+        const r = rows[j], st = r.st;
+        if (e.kind === 'event') { if (r.subj) add(r.subj, e.att, c); continue; }
+        if (st && st.x === 'c') { if (r.subj) { per[r.subj].cancelled++; tot.cancelled++; } continue; }
+        if (st && st.x === 's') {
+          if (r.subj) per[r.subj].replacedOut++;
+          if (st.sub && per[st.sub]) { per[st.sub].replacedIn++; add(st.sub, !st.abs, c); }
+          continue;
+        }
+        if (r.subj) add(r.subj, !(st && st.abs), c);
+      }
+    }
+    e.extras.forEach(function (x) { if (x && per[x.sub]) add(x.sub, !x.abs, c); });
+    if (c.held > 0) { teachingDays++; if (c.att === 0) absentDays++; }
+  }
+  return { per: per, tot: tot, teachingDays: teachingDays, absentDays: absentDays };
+}
+
+function pct(a, h) { return h > 0 ? a / h * 100 : null; }
+/* classes you must attend in a row to reach t% */
+function needToReach(a, h, t) {
+  const f = t / 100;
+  if (h === 0 || a / h >= f - 1e-12) return 0;
+  if (f >= 1) return Infinity;
+  return Math.max(0, Math.ceil((f * h - a) / (1 - f) - 1e-9));
+}
+/* classes you can skip in a row and still be at or above t% */
+function canSkip(a, h, t) {
+  const f = t / 100;
+  if (f <= 0) return Infinity;
+  return Math.max(0, Math.floor(a / f - h + 1e-9));
+}
+function statusOf(a, h, t) {
+  if (h === 0) return 'none';
+  if (a / h < t / 100 - 1e-12) return 'below';
+  return canSkip(a, h, t) <= 1 ? 'edge' : 'ok';
+}
+function resolveAsOf(S, today) {
+  const a = S.settings.asOf;
+  if (a === 'end') return RANGE_END;
+  if (a && a !== 'today') return clampKey(a);
+  if (today < RANGE_START) return addDays(RANGE_START, -1);
+  return today > RANGE_END ? RANGE_END : today;
+}
+function analyze(S, today) {
+  const asOf = resolveAsOf(S, today), t = S.settings.threshold;
+  const cur = tally(S, asOf), end = tally(S, RANGE_END);
+  function build(c, e) {
+    const remaining = e.held - c.held;
+    const best = pct(c.att + remaining, c.held + remaining);
+    return {
+      held: c.held, att: c.att, missed: c.held - c.att, cancelled: c.cancelled || 0,
+      pct: pct(c.att, c.held), remaining: remaining,
+      planned: pct(e.att, e.held), best: best,
+      need: needToReach(c.att, c.held, t), skip: canSkip(c.att, c.held, t),
+      status: statusOf(c.att, c.held, t),
+      lost: best !== null && best < t - 1e-9
+    };
+  }
+  const rows = S.subjects.map(function (s) {
+    const r = build(cur.per[s.id], end.per[s.id]);
+    r.s = s; r.replacedIn = cur.per[s.id].replacedIn; r.replacedOut = cur.per[s.id].replacedOut;
+    return r;
+  });
+  const overall = build(cur.tot, end.tot);
+  return { asOf: asOf, rows: rows, overall: overall, teachingDays: cur.teachingDays, absentDays: cur.absentDays, threshold: t };
+}
+
+/* ---------- per-day summary (for the checklist headers) ---------- */
+function daySummary(S, k) {
+  const e = eff(S, k);
+  const r = { e: e, counted: 0, present: 0, absent: 0, cancelled: 0, replaced: 0, extras: e.extras.length };
+  if (e.kind === 'off') return r;
+  dayPeriods(S, e).forEach(function (x) {
+    const st = x.st;
+    if (e.kind === 'event') { if (x.subj) { r.counted++; if (e.att) r.present++; else r.absent++; } return; }
+    if (st && st.x === 'c') { if (x.subj) r.cancelled++; return; }
+    if (st && st.x === 's') { if (st.sub) { r.replaced++; r.counted++; if (st.abs) r.absent++; else r.present++; } return; }
+    if (x.subj) { r.counted++; if (st && st.abs) r.absent++; else r.present++; }
+  });
+  return r;
+}
+
+/* ---------- calendar check: totals for the current calendar ---------- */
+function calendarTotals(S) {
+  const byDay = [0, 0, 0, 0, 0];
+  let working = 0, teaching = 0;
+  allDays().forEach(function (k) {
+    const e = eff(S, k);
+    if (wd(k) === 6) return;
+    if (e.type !== 'holiday' && e.type !== 'declared' && e.type !== 'noclass') working++;
+    if (e.kind !== 'off') { teaching++; if (e.tt !== null && e.tt !== undefined && e.tt < 5) byDay[e.tt]++; }
+  });
+  return { working: working, teaching: teaching, byDay: byDay };
+}
+
+/* ---------- editing helpers ---------- */
+function dayOv(S, k) { if (!S.days[k]) S.days[k] = {}; return S.days[k]; }
+function slotOv(S, k, pid) { const o = dayOv(S, k); if (!o.slots) o.slots = {}; if (!o.slots[pid]) o.slots[pid] = {}; return o.slots[pid]; }
+function cleanDay(S, k) {
+  const o = S.days[k]; if (!o) return;
+  if (o.slots) {
+    Object.keys(o.slots).forEach(function (p) {
+      const s = o.slots[p];
+      if (!s.x && !s.abs) delete o.slots[p];
+      else if (s.x !== 's') { delete s.sub; if (s.x === 'c') delete s.abs; }
+    });
+    if (!Object.keys(o.slots).length) delete o.slots;
+  }
+  if (o.extras && !o.extras.length) delete o.extras;
+  if (o.att === true) delete o.att;
+  if (!Object.keys(o).length) delete S.days[k];
+}
+function setSlotPresent(S, k, pid, present) {
+  const s = slotOv(S, k, pid);
+  if (present) delete s.abs; else s.abs = true;
+  cleanDay(S, k);
+}
+function setSlotStatus(S, k, pid, x) {
+  const s = slotOv(S, k, pid);
+  if (!x) { delete s.x; delete s.sub; }
+  else { s.x = x; if (x === 'c') delete s.abs; if (x === 's' && s.sub === undefined) s.sub = ''; }
+  cleanDay(S, k);
+}
+function markWholeDay(S, k, present) {
+  const e = eff(S, k);
+  if (e.kind === 'event') { const o = dayOv(S, k); if (present) delete o.att; else o.att = false; cleanDay(S, k); return; }
+  dayPeriods(S, e).forEach(function (r) {
+    if (!r.subj && !(r.st && r.st.x === 's')) return;
+    if (r.st && r.st.x === 'c') return;
+    const s = slotOv(S, k, r.p.id);
+    if (present) delete s.abs; else s.abs = true;
+  });
+  cleanDay(S, k);
+}
+/* Prepone / postpone: move the day's special type (exam, holiday, event) to another date. */
+function moveEvent(S, src, dst) {
+  if (src === dst || !inRange(dst)) return false;
+  const e = eff(S, src);
+  const d = dayOv(S, dst);
+  d.type = e.type; d.label = e.label; d.code = e.code;
+  delete d.tt;
+  const s = dayOv(S, src);
+  s.type = wd(src) >= 5 ? 'noclass' : 'regular'; s.label = ''; delete s.code;
+  return true;
+}
+
+/* ---------- marks ---------- */
+function num(v) { if (v === '' || v === null || v === undefined) return null; const x = Number(v); return isFinite(x) ? x : null; }
+function markRow(m) {
+  m = m || {};
+  const ts = [num(m.ia1), num(m.ia2), num(m.ia3)].filter(function (x) { return x !== null; });
+  const nT = ts.length;
+  const internal = nT ? ts.reduce(function (a, b) { return a + b; }, 0) / nT : null; // average of the tests entered, out of 25
+  const a = num(m.asg), p = num(m.prj), e = num(m.ext);
+  const ext50 = e !== null ? e / 2 : null;
+  let sec = 0, max = 0;
+  if (nT) { sec += internal; max += 25; }
+  if (a !== null) { sec += a; max += 10; }
+  if (p !== null) { sec += p; max += 15; }
+  if (ext50 !== null) { sec += ext50; max += 50; }
+  const complete = nT === 3 && a !== null && p !== null && e !== null;
+  return {
+    internal: internal, nT: nT, a: a, p: p, e: e,
+    ap: (a !== null || p !== null) ? (a || 0) + (p || 0) : null,
+    ext50: ext50, complete: complete,
+    total: complete ? sec : null,
+    est: max ? sec / max * 100 : null, // out of 100; missing parts assumed at the same % as the entered ones
+    entered: max > 0
+  };
+}
+function cgpaOf(S) {
+  let sw = 0, sg = 0, nIncl = 0, nComplete = 0;
+  S.subjects.forEach(function (s) {
+    const w = Number(s.credits), wt = isFinite(w) && w > 0 ? w : 0;
+    if (!wt) return;
+    nIncl++;
+    const r = markRow(S.marks[s.id]);
+    if (r.est !== null) { sw += wt; sg += wt * r.est / 10; }
+    if (r.complete) nComplete++;
+  });
+  const proj = sw ? sg / sw : null;
+  return { projected: proj, final: (nIncl > 0 && nComplete === nIncl) ? proj : null, nIncl: nIncl, nComplete: nComplete };
+}
+/* Internals + assignment/project (out of 50). mode 'same': pending parts assumed at the same % as entered parts; 'zero': pending = 0. */
+function cieEstimate(m, mode) {
+  const r = markRow(m);
+  let sec = 0, max = 0;
+  if (r.nT) { sec += r.internal; max += 25; }
+  if (r.a !== null) { sec += r.a; max += 10; }
+  if (r.p !== null) { sec += r.p; max += 15; }
+  if (mode === 'zero') return { cie: sec, known: max > 0, complete: max === 50 };
+  return { cie: max ? sec / max * 50 : null, known: max > 0, complete: max === 50 };
+}
+const clamp = function (v, lo, hi) { return Math.min(hi, Math.max(lo, v)); };
+/* Target CGPA -> external marks needed (out of 100) for one subject */
+function neededExternal(T, cie) { return 2 * (10 * T - cie); }
+/* Target internal (out of 25): what the pending tests must average */
+function neededTests(m, target) {
+  const ts = [num(m && m.ia1), num(m && m.ia2), num(m && m.ia3)].filter(function (x) { return x !== null; });
+  const n = ts.length, sum = ts.reduce(function (a, b) { return a + b; }, 0), pend = 3 - n;
+  if (pend === 0) return { pending: 0, current: sum / 3, met: sum / 3 >= target - 1e-9 };
+  return { pending: pend, need: (3 * target - sum) / pend };
+}
+/* Target assignment + project (out of 25) */
+function neededAP(m, target) {
+  const r = markRow(m);
+  const got = (r.a || 0) + (r.p || 0);
+  const pendMax = (r.a === null ? 10 : 0) + (r.p === null ? 15 : 0);
+  const parts = [];
+  if (r.a === null) parts.push('Assignment /10');
+  if (r.p === null) parts.push('Project / class test / lab /15');
+  if (pendMax === 0) return { pendMax: 0, got: got, met: got >= target - 1e-9 };
+  return { pendMax: pendMax, got: got, need: target - got, parts: parts };
+}
+
+/* ---------- formatting ---------- */
+function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function fp(n, d) { return n === null || n === undefined || !isFinite(n) ? '-' : n.toFixed(d === undefined ? 1 : d); }
+function fpw(n) { return n === null || n === undefined || !isFinite(n) ? '-' : (Math.abs(n - Math.round(n)) < 0.05 ? String(Math.round(n)) : n.toFixed(1)); }
+function fm(n) { if (n === null || n === undefined || !isFinite(n)) return '-'; const r = Math.round(n * 100) / 100; return String(r); }
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+
+/* ---------- report (used by CSV, PDF, preview, copy) ---------- */
+function advice(r, t, unit) {
+  unit = unit || 'class';
+  const u = unit === 'class' ? ['class', 'classes'] : [unit, unit + 's'];
+  if (r.status === 'none') return 'No classes counted yet';
+  if (r.status === 'below') {
+    if (!isFinite(r.need)) return 'Cannot recover to ' + t + '%';
+    return 'Attend the next ' + plural(r.need, u[0], u[1]) + ' to reach ' + t + '%' + (r.lost ? ' (not reachable this semester)' : '');
+  }
+  if (r.skip >= 1) return 'Can skip the next ' + plural(r.skip, u[0], u[1]) + ' and stay at ' + t + '%+';
+  return 'No spare classes: skipping one drops you below ' + t + '%';
+}
+function adviceShort(r) {
+  if (r.status === 'none') return '-';
+  if (r.status === 'below') return isFinite(r.need) ? 'Attend next ' + r.need : 'Cannot recover';
+  return r.skip >= 1 ? 'Can skip ' + r.skip : 'None spare';
+}
+function buildReport(S, today) {
+  const A = analyze(S, today), t = S.settings.threshold;
+  const att = A.rows.map(function (r) { return { s: r.s, held: r.held, att: r.att, pct: r.pct, status: r.status, advice: advice(r, t), short: adviceShort(r) }; });
+  const marks = S.subjects.map(function (s) { return { s: s, r: markRow(S.marks[s.id]), m: S.marks[s.id] || {} }; });
+  const cg = cgpaOf(S);
+  const log = [];
+  allDays().forEach(function (k) {
+    if (k > A.asOf) return;
+    const e = eff(S, k), o = S.days[k];
+    if (!o) return;
+    if (o.type !== undefined && o.type !== e.base.type) log.push({ k: k, per: '-', sub: '-', note: 'Day changed from ' + TYPES[e.base.type].label + ' to ' + TYPES[e.type].label + (e.label ? ' (' + e.label + ')' : '') });
+    if (e.kind === 'event' && !e.att) log.push({ k: k, per: 'All', sub: '-', note: 'Event day: did not attend college (' + (e.label || 'event') + ')' });
+    if (e.kind === 'class') {
+      dayPeriods(S, e).forEach(function (x) {
+        const st = x.st; if (!st) return;
+        const nm = x.subj ? subj(S, x.subj).short : '-';
+        if (st.x === 'c') log.push({ k: k, per: x.p.label, sub: nm, note: 'Class cancelled (not counted)' });
+        else if (st.x === 's') {
+          const sb = st.sub ? subj(S, st.sub) : null;
+          log.push({ k: k, per: x.p.label, sub: nm, note: 'Replaced by ' + (sb ? sb.short : 'an untracked class') + (sb ? (st.abs ? ' (absent)' : ' (attended)') : ' (not counted)') });
+        } else if (st.abs && x.subj) log.push({ k: k, per: x.p.label, sub: nm, note: 'Absent' });
+      });
+    }
+    e.extras.forEach(function (x) { const sb = subj(S, x.sub); if (sb) log.push({ k: k, per: 'Extra', sub: sb.short, note: 'Extra class (' + (x.abs ? 'absent' : 'attended') + ')' }); });
+  });
+  return { A: A, att: att, marks: marks, cg: cg, log: log, t: t, today: today };
+}
+function csvCell(v) { const s = String(v === null || v === undefined ? '' : v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function csvRow(a) { return a.map(csvCell).join(','); }
+function reportCSV(S, today) {
+  const R = buildReport(S, today), P = S.profile, rows = [];
+  rows.push(csvRow(['Present - attendance and marks summary']));
+  rows.push(csvRow(['Student', P.name])); rows.push(csvRow(['USN / roll no.', P.usn]));
+  rows.push(csvRow(['Semester', P.sem])); rows.push(csvRow(['College', P.college]));
+  rows.push(csvRow(['Batch', S.settings.batch])); rows.push(csvRow(['Counted until', fmtDate(R.A.asOf, true)]));
+  rows.push(csvRow(['Minimum attendance', R.t + '%'])); rows.push('');
+  rows.push(csvRow(['ATTENDANCE (hour-wise)']));
+  rows.push(csvRow(['Subject', 'Course code', 'Faculty', 'Hours held', 'Hours attended', 'Attendance %', 'Status', 'Note']));
+  R.att.forEach(function (r) { rows.push(csvRow([r.s.name, r.s.code, r.s.faculty, r.held, r.att, fp(r.pct, 2), statusLabel(r.status, R.t), r.advice])); });
+  const o = R.A.overall;
+  rows.push(csvRow(['Overall', '', '', o.held, o.att, fp(o.pct, 2), statusLabel(o.status, R.t), advice(o, R.t, 'hour')])); rows.push('');
+  rows.push(csvRow(['MARKS']));
+  rows.push(csvRow(['Subject', 'IA 1 /25', 'IA 2 /25', 'IA 3 /25', 'Internal /25', 'Assignment /10', 'Project-Test-Lab /15', 'Assign+Project /25', 'External /100', 'External /50', 'Total /100', 'Grade point', 'Weight']));
+  R.marks.forEach(function (x) {
+    const r = x.r, m = x.m;
+    rows.push(csvRow([x.s.name, m.ia1 === undefined ? '' : m.ia1, m.ia2 === undefined ? '' : m.ia2, m.ia3 === undefined ? '' : m.ia3, r.internal === null ? '' : fm(r.internal),
+      r.a === null ? '' : r.a, r.p === null ? '' : r.p, r.ap === null ? '' : fm(r.ap), r.e === null ? '' : r.e, r.ext50 === null ? '' : fm(r.ext50),
+      r.total === null ? '' : fm(r.total), r.total === null ? '' : fp(r.total / 10, 2), x.s.credits]));
+  });
+  rows.push(csvRow([R.cg.final !== null ? 'CGPA (final)' : 'CGPA (projected, incomplete marks)', R.cg.projected === null ? '' : fp(R.cg.projected, 2)])); rows.push('');
+  rows.push(csvRow(['ABSENCES AND CHANGES']));
+  rows.push(csvRow(['Date', 'Period', 'Subject', 'Detail']));
+  R.log.forEach(function (l) { rows.push(csvRow([l.k, l.per, l.sub, l.note])); });
+  return '﻿' + rows.join('\r\n') + '\r\n';
+}
+function statusLabel(st, t) { return st === 'ok' ? 'On track' : st === 'edge' ? 'Little room' : st === 'below' ? 'Below ' + t + '%' : 'No classes yet'; }
+function reportText(S, today) {
+  const R = buildReport(S, today), P = S.profile, L = [];
+  L.push('ATTENDANCE AND MARKS SUMMARY');
+  if (P.name || P.usn) L.push([P.name, P.usn].filter(Boolean).join(' | '));
+  L.push([P.sem, P.college, 'Batch ' + S.settings.batch].filter(Boolean).join(' | '));
+  L.push('Counted until ' + fmtDate(R.A.asOf, true) + ' | minimum ' + R.t + '%'); L.push('');
+  L.push('Attendance');
+  R.att.forEach(function (r) { L.push('  ' + r.s.short + ': ' + r.att + '/' + r.held + ' = ' + fp(r.pct) + '% (' + statusLabel(r.status, R.t) + ')'); });
+  const o = R.A.overall; L.push('  Overall: ' + o.att + '/' + o.held + ' = ' + fp(o.pct) + '%'); L.push('');
+  L.push('Marks');
+  R.marks.forEach(function (x) { const r = x.r; L.push('  ' + x.s.short + ': internal ' + fm(r.internal) + '/25, assign+project ' + fm(r.ap) + '/25, external ' + fm(r.ext50) + '/50, total ' + fm(r.total) + '/100'); });
+  L.push('  ' + (R.cg.final !== null ? 'CGPA' : 'CGPA (projected)') + ': ' + fp(R.cg.projected, 2));
+  return L.join('\n');
+}
+
+/* ---------- minimal PDF writer (A4, Helvetica) ---------- */
+const HELV = { ' ': 278, '!': 278, '"': 355, '#': 556, '$': 556, '%': 889, '&': 667, "'": 191, '(': 333, ')': 333, '*': 389, '+': 584, ',': 278, '-': 333, '.': 278, '/': 278, ':': 278, ';': 278, '<': 584, '=': 584, '>': 584, '?': 556, '@': 1015, '[': 278, '\\': 278, ']': 278, '^': 469, '_': 556, '`': 333, '{': 334, '|': 260, '}': 334, '~': 584 };
+'0123456789'.split('').forEach(function (c) { HELV[c] = 556; });
+const UP = { A: 667, B: 667, C: 722, D: 722, E: 667, F: 611, G: 778, H: 722, I: 278, J: 500, K: 667, L: 556, M: 833, N: 722, O: 778, P: 667, Q: 778, R: 722, S: 667, T: 611, U: 722, V: 667, W: 944, X: 667, Y: 667, Z: 611 };
+const LO = { a: 556, b: 556, c: 500, d: 556, e: 556, f: 278, g: 556, h: 556, i: 222, j: 222, k: 500, l: 222, m: 833, n: 556, o: 556, p: 556, q: 556, r: 333, s: 500, t: 278, u: 556, v: 500, w: 722, x: 500, y: 500, z: 500 };
+Object.assign(HELV, UP, LO);
+function pdfText(s) {
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/[–—−]/g, '-').replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/→/g, '->')
+    .replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/•/g, '-').replace(/ /g, ' ')
+    .replace(/[^\x20-\x7e]/g, '?');
+}
+function textWidth(s, size, bold) {
+  let w = 0;
+  for (let i = 0; i < s.length; i++) w += (HELV[s[i]] || 556);
+  return w / 1000 * size * (bold ? 1.06 : 1);
+}
+function fitText(s, width, size, bold) {
+  s = pdfText(s);
+  if (textWidth(s, size, bold) <= width) return s;
+  while (s.length > 1 && textWidth(s + '...', size, bold) > width) s = s.slice(0, -1);
+  return s.replace(/\s+$/, '') + '...';
+}
+function buildPDF(S, today) {
+  const R = buildReport(S, today), P = S.profile, t = R.t;
+  const W = 595.28, H = 841.89, M = 40, CW = W - 2 * M;
+  const pages = []; let cur, y;
+  const INK = '0.07 0.10 0.17', MUTE = '0.35 0.40 0.47', ACC = '0.14 0.26 0.77', GOOD = '0.00 0.39 0.00', BAD = '0.71 0.14 0.14', WARN = '0.48 0.32 0.00';
+  function esc2(s) { return pdfText(s).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); }
+  function newPage() { cur = []; pages.push(cur); y = H - 48; }
+  function text(x, yy, s, size, bold, color, align, width) {
+    s = pdfText(s);
+    if (align === 'r') x = x + width - textWidth(s, size, bold);
+    else if (align === 'c') x = x + (width - textWidth(s, size, bold)) / 2;
+    cur.push(color + ' rg BT /' + (bold ? 'F2' : 'F1') + ' ' + size + ' Tf ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' Td (' + esc2(s) + ') Tj ET');
+  }
+  function rect(x, yy, w, h, color) { cur.push(color + ' rg ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' ' + w.toFixed(2) + ' ' + h.toFixed(2) + ' re f'); }
+  function need(h) { if (y - h < 56) newPage(); }
+  function heading(s) { need(40); y -= 10; text(M, y, s, 11, true, ACC); y -= 6; rect(M, y, CW, 0.8, '0.14 0.26 0.77'); y -= 14; }
+  function table(cols, rows, opt) {
+    opt = opt || {};
+    const RH = 17;
+    function head() {
+      need(RH * 2);
+      rect(M, y - 4.5, CW, RH, '0.91 0.93 0.96');
+      let x = M;
+      cols.forEach(function (c) { text(x + 5, y, c.h, 8, true, MUTE, c.a, c.w - 10); x += c.w; });
+      y -= RH;
+    }
+    head();
+    rows.forEach(function (r, i) {
+      if (y - RH < 56) { newPage(); head(); }
+      if (i % 2 === 1) rect(M, y - 4.5, CW, RH, '0.97 0.975 0.985');
+      let x = M;
+      cols.forEach(function (c, j) {
+        const cell = r.cells[j], bold = !!(r.bold || c.bold);
+        const color = (c.color && c.color(r, cell)) || INK;
+        text(x + 5, y, fitText(cell, c.w - 10, 8.5, bold), 8.5, bold, color, c.a, c.w - 10);
+        x += c.w;
+      });
+      y -= RH;
+    });
+  }
+  newPage();
+  text(M, y, 'Attendance & Marks Summary', 18, true, INK); y -= 18;
+  text(M, y, [P.name, P.usn].filter(Boolean).join('  |  ') || 'Student name not set', 10.5, true, INK); y -= 14;
+  text(M, y, [P.sem, P.college, 'Batch ' + S.settings.batch].filter(Boolean).join('  |  '), 9, false, MUTE); y -= 12;
+  text(M, y, 'Counted until ' + fmtDate(R.A.asOf, true) + '  |  Minimum attendance ' + t + '%  |  Generated ' + fmtDate(today, true), 9, false, MUTE); y -= 6;
+
+  heading('Attendance by subject (hour-wise)');
+  const sc = function (r) { return r.st === 'below' ? BAD : (r.st === 'edge' ? WARN : (r.st === 'ok' ? GOOD : MUTE)); };
+  const o = R.A.overall;
+  const arows = R.att.map(function (r) { return { st: r.status, cells: [r.s.short + '  ' + r.s.name, String(r.held), String(r.att), r.pct === null ? '-' : fp(r.pct) + '%', statusLabel(r.status, t), r.short] }; });
+  arows.push({ st: o.status, bold: true, cells: ['Overall (all hours)', String(o.held), String(o.att), o.pct === null ? '-' : fp(o.pct) + '%', statusLabel(o.status, t), adviceShort(o)] });
+  table([
+    { h: 'Subject', w: 212 }, { h: 'Held', w: 34, a: 'r' }, { h: 'Attended', w: 52, a: 'r' }, { h: '%', w: 46, a: 'r', bold: true },
+    { h: 'Status', w: 68, color: sc }, { h: 'Next step', w: 103 }
+  ], arows);
+
+  heading('Marks and CGPA');
+  const mrows = R.marks.map(function (x) {
+    const r = x.r;
+    return { cells: [x.s.short + '  ' + x.s.name, fm(r.internal), fm(r.ap), fm(r.ext50), r.total === null ? (r.est === null ? '-' : '~' + fm(r.est)) : fm(r.total), r.total === null ? (r.est === null ? '-' : '~' + fp(r.est / 10, 2)) : fp(r.total / 10, 2)] };
+  });
+  table([
+    { h: 'Subject', w: 215 }, { h: 'Internal /25', w: 60, a: 'r' }, { h: 'Assign+Proj /25', w: 75, a: 'r' },
+    { h: 'External /50', w: 60, a: 'r' }, { h: 'Total /100', w: 55, a: 'r', bold: true }, { h: 'Grade pt', w: 50, a: 'r' }
+  ], mrows);
+  need(30); y -= 4;
+  text(M, y, (R.cg.final !== null ? 'CGPA' : 'CGPA (projected; marks incomplete)') + ':  ' + fp(R.cg.projected, 2) + ' / 10', 11, true, INK); y -= 11;
+  text(M, y, 'Internal = average of the internal tests entered. Total = internal + assignment/project + external/2. CGPA = total/10 averaged across subjects by weight.', 7.5, false, MUTE); y -= 6;
+  if (R.cg.final === null) { text(M, y - 4, '~ = estimate: missing parts are assumed to score the same percentage as the parts entered.', 7.5, false, MUTE); y -= 10; }
+
+  heading('Absences and changes');
+  if (!R.log.length) { text(M, y, 'Nothing to list: every counted class is marked present.', 9, false, MUTE); y -= 14; }
+  else table([{ h: 'Date', w: 78 }, { h: 'Period', w: 46 }, { h: 'Subject', w: 62 }, { h: 'Detail', w: 329 }],
+    R.log.map(function (l) { return { cells: [fmtDate(l.k), l.per, l.sub, l.note] }; }));
+
+  const total = pages.length;
+  pages.forEach(function (pg, i) {
+    cur = pg;
+    text(M, 28, 'Generated by Present - attendance & marks', 7.5, false, MUTE);
+    text(M, 28, 'Page ' + (i + 1) + ' of ' + total, 7.5, false, MUTE, 'r', CW);
+  });
+  /* assemble */
+  const objs = [null];
+  const kids = [];
+  for (let i = 0; i < total; i++) kids.push((5 + 2 * i) + ' 0 R');
+  objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2] = '<< /Type /Pages /Kids [' + kids.join(' ') + '] /Count ' + total + ' >>';
+  objs[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  pages.forEach(function (pg, i) {
+    const data = pg.join('\n');
+    objs[5 + 2 * i] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + W + ' ' + H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + (6 + 2 * i) + ' 0 R >>';
+    objs[6 + 2 * i] = '<< /Length ' + data.length + ' >>\nstream\n' + data + '\nendstream';
+  });
+  let out = '%PDF-1.4\n'; const off = [];
+  for (let i = 1; i < objs.length; i++) { off[i] = out.length; out += i + ' 0 obj\n' + objs[i] + '\nendobj\n'; }
+  const xr = out.length;
+  out += 'xref\n0 ' + objs.length + '\n0000000000 65535 f \n';
+  for (let i = 1; i < objs.length; i++) out += ('0000000000' + off[i]).slice(-10) + ' 00000 n \n';
+  out += 'trailer\n<< /Size ' + objs.length + ' /Root 1 0 R >>\nstartxref\n' + xr + '\n%%EOF';
+  const bytes = new Uint8Array(out.length);
+  for (let i = 0; i < out.length; i++) bytes[i] = out.charCodeAt(i) & 255;
+  return bytes;
+}
+
+if (typeof module !== 'undefined') module.exports = { RANGE_START, RANGE_END, COLLEGE, TYPES, CAL, DEF, defaultState, sanitizeState, eff, tally, analyze, daySummary, calendarTotals, markWholeDay, setSlotPresent, setSlotStatus, moveEvent, markRow, cgpaOf, cieEstimate, neededExternal, neededTests, neededAP, needToReach, canSkip, statusOf, buildReport, reportCSV, reportText, buildPDF, allDays, wd, keyOf, dayPeriods, getBase, addDays, dayOv, cleanDay, resolveAsOf };
+
+
+
+'use strict';
+/* =====================================================================
+   Present: UI, part 1 (state, helpers, header, dashboard, attendance, calendar)
+   ===================================================================== */
+const LS_KEY = 'present.v1';
+const TABS = [
+  ['dashboard', 'Dashboard'], ['attendance', 'Attendance'], ['calendar', 'Calendar'],
+  ['marks', 'Marks'], ['targets', 'Targets'], ['timetable', 'Timetable'], ['export', 'Export']
+];
+let storageOK = true;
+function load() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) { const s = sanitizeState(JSON.parse(raw)); if (s) return s; }
+  } catch (e) { storageOK = false; }
+  return defaultState();
+}
+let S = load();
+let TODAY = keyOf(new Date());
+const UI = { tab: 'dashboard', attGroup: null, openDay: null, scrollTo: null };
+let saveTimer = null;
+function saveNow() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(S)); storageOK = true; } catch (e) { storageOK = false; }
+  syncHeader();
+}
+function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 250); }
+
+const $ = function (s, r) { return (r || document).querySelector(s); };
+const $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+/* ---------- icons ---------- */
+const ICONS = {
+  check: '<path d="M4 8.5l2.8 2.8L12 5.5"/>',
+  alert: '<path d="M8 2.2l6 10.6H2z"/><path d="M8 6.5v3"/><path d="M8 11.4v.1"/>',
+  minus: '<path d="M4 8h8"/>',
+  chev: '<path d="M4.5 6.2L8 9.7l3.5-3.5"/>',
+  up: '<path d="M8 12V4.5M4.7 7.6L8 4.3l3.3 3.3"/>',
+  down: '<path d="M8 4v7.5M4.7 8.4L8 11.7l3.3-3.3"/>',
+  left: '<path d="M12 8H4.5M7.6 4.7L4.3 8l3.3 3.3"/>',
+  right: '<path d="M4 8h7.5M8.4 4.7L11.7 8l-3.3 3.3"/>',
+  trash: '<path d="M3.5 4.5h9M6.5 4.5V3h3v1.5M5 4.5l.5 8h5l.5-8"/>',
+  plus: '<path d="M8 3.5v9M3.5 8h9"/>',
+  sun: '<circle cx="8" cy="8" r="2.8"/><path d="M8 1.8v1.4M8 12.8v1.4M1.8 8h1.4M12.8 8h1.4M3.6 3.6l1 1M11.4 11.4l1 1M12.4 3.6l-1 1M4.6 11.4l-1 1"/>',
+  moon: '<path d="M12.8 9.6A5.2 5.2 0 016.4 3.2a5.2 5.2 0 106.4 6.4z"/>',
+  down2: '<path d="M8 2.5v7.6M4.8 7.2L8 10.4l3.2-3.2M3 13h10"/>',
+  copy: '<rect x="5.5" y="5.5" width="7" height="8" rx="1.3"/><path d="M10.5 5.5V4a1.3 1.3 0 00-1.3-1.3H4.8A1.3 1.3 0 003.5 4v6.2a1.3 1.3 0 001.3 1.3h.7"/>',
+  undo: '<path d="M5.2 4.2L2.8 6.6l2.4 2.4M3 6.6h6a3.6 3.6 0 010 7.2H6"/>',
+  info: '<circle cx="8" cy="8" r="5.8"/><path d="M8 7.2v3.6M8 5.1v.1"/>',
+  up2: '<path d="M8 13.5V5.9M4.8 8.8L8 5.6l3.2 3.2M3 3h10"/>',
+  cal: '<rect x="2.5" y="3.5" width="11" height="10" rx="1.6"/><path d="M2.5 6.7h11M5.5 2v2.8M10.5 2v2.8"/>',
+  swap: '<path d="M3 5.5h9.5M10 3l2.5 2.5L10 8M13 10.5H3.5M6 8l-2.5 2.5L6 13"/>'
+};
+function ic(n, cls) {
+  return '<svg class="ic ' + (cls || '') + '" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || '') + '</svg>';
+}
+
+/* ---------- small UI helpers ---------- */
+function badge(st, t) {
+  const m = { ok: ['check', 'On track'], edge: ['alert', 'Little room'], below: ['alert', 'Below ' + t + '%'], none: ['minus', 'No classes yet'] }[st];
+  return '<span class="badge ' + st + '">' + ic(m[0]) + m[1] + '</span>';
+}
+function opt(v, label, sel) { return '<option value="' + esc(v) + '"' + (sel ? ' selected' : '') + '>' + esc(label) + '</option>'; }
+function subjOptions(selId, blankLabel) {
+  let h = blankLabel !== undefined ? opt('', blankLabel, !selId) : '';
+  S.subjects.forEach(function (s) { h += opt(s.id, s.short, s.id === selId); });
+  return h;
+}
+function dot(s) { return '<i class="sdot" style="--c:var(--sc' + ((s.color || 0) % 8) + ')"></i>'; }
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 3200);
+}
+let modalRes = null;
+function confirmBox(o) {
+  return new Promise(function (res) {
+    const m = $('#modal'); modalRes = res;
+    m.innerHTML = '<div class="scrim" data-act="modal-cancel"></div><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-t"><h3 id="dlg-t">' + esc(o.title) + '</h3><p>' + o.body + '</p><div class="dlg-btns"><button class="btn" data-act="modal-cancel" id="dlg-cancel">Cancel</button><button class="btn ' + (o.danger ? 'danger' : 'primary') + '" data-act="modal-ok">' + esc(o.ok || 'Confirm') + '</button></div></div>';
+    m.hidden = false; $('#dlg-cancel').focus();
+  });
+}
+function closeModal(v) { const m = $('#modal'); m.hidden = true; m.innerHTML = ''; if (modalRes) { const r = modalRes; modalRes = null; r(v); } }
+
+/* ---------- theme ---------- */
+function effectiveTheme() {
+  const a = document.documentElement.getAttribute('data-theme');
+  if (a === 'dark' || a === 'light') return a;
+  return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+/* ---------- header ---------- */
+function syncHeader() {
+  const bs = $('#batch-sel');
+  if (bs) {
+    const want = S.settings.batches.map(function (b) { return opt(b, b, b === S.settings.batch); }).join('');
+    if (bs.innerHTML !== want) bs.innerHTML = want;
+    bs.value = S.settings.batch;
+  }
+  const th = $('#thr');
+  if (th && document.activeElement !== th) th.value = S.settings.threshold;
+  const dark = effectiveTheme() === 'dark';
+  const tb = $('#theme-btn');
+  if (tb) { tb.innerHTML = ic(dark ? 'sun' : 'moon'); tb.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme'); tb.title = dark ? 'Light theme' : 'Dark theme'; }
+  const chip = $('#save-chip');
+  if (chip) { chip.textContent = storageOK ? 'Saved on this device' : 'Not saved: export a backup'; chip.className = 'save-chip' + (storageOK ? '' : ' warn'); }
+  $$('.tabs button').forEach(function (b) { const on = b.dataset.tab === UI.tab; b.setAttribute('aria-current', on ? 'page' : 'false'); b.classList.toggle('on', on); });
+}
+
+/* ---------- dashboard ---------- */
+function focusDay() { return clampKey(TODAY); }
+function asOfControl() {
+  const a = S.settings.asOf, mode = (a === 'today' || !a) ? 'today' : (a === 'end' ? 'end' : 'custom');
+  let h = '<div class="asof"><label for="asof-sel">Count classes until</label><div class="asof-row"><select id="asof-sel" class="in" data-act="asof" data-fid="asof-sel">' +
+    opt('today', 'Today, ' + fmtDate(clampKey(TODAY)), mode === 'today') + opt('end', 'End of semester, ' + fmtDate(RANGE_END), mode === 'end') + opt('custom', 'A date I choose', mode === 'custom') + '</select>';
+  if (mode === 'custom') h += '<input type="date" class="in" id="asof-date" data-act="asof-date" data-fid="asof-date" min="' + RANGE_START + '" max="' + RANGE_END + '" value="' + esc(a) + '" aria-label="Count classes until this date">';
+  return h + '</div></div>';
+}
+function ringSVG(pctV, status, t) {
+  const R = 56, C = 2 * Math.PI * R, f = Math.min(1, (pctV || 0) / 100);
+  const ang = (t / 100) * 2 * Math.PI - Math.PI / 2;
+  const x1 = 70 + (R - 11) * Math.cos(ang), y1 = 70 + (R - 11) * Math.sin(ang), x2 = 70 + (R + 11) * Math.cos(ang), y2 = 70 + (R + 11) * Math.sin(ang);
+  return '<svg viewBox="0 0 140 140" class="ring-svg st-' + status + '" role="img" aria-label="Overall attendance ' + fp(pctV) + ' percent, minimum ' + t + ' percent">' +
+    '<circle cx="70" cy="70" r="' + R + '" class="ring-track"/>' +
+    '<circle cx="70" cy="70" r="' + R + '" class="ring-fill" stroke-dasharray="' + (f * C).toFixed(1) + ' ' + C.toFixed(1) + '" transform="rotate(-90 70 70)"/>' +
+    '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" class="ring-tick"/></svg>';
+}
+function meter(p, t, st) {
+  const w = Math.max(0, Math.min(100, p || 0));
+  return '<div class="meter st-' + st + '" role="img" aria-label="' + fp(p) + ' percent, minimum ' + t + ' percent"><div class="meter-fill" style="width:' + w + '%"></div><div class="meter-tick" style="left:' + t + '%"><span>' + t + '%</span></div></div>';
+}
+function viewDashboard() {
+  const A = analyze(S, TODAY), o = A.overall, t = A.threshold;
+  const bad = A.rows.filter(function (r) { return r.status === 'below'; }).sort(function (a, b) { return a.pct - b.pct; });
+  const edge = A.rows.filter(function (r) { return r.status === 'edge'; }).sort(function (a, b) { return a.pct - b.pct; });
+  let h = '<div class="stack">';
+  /* hero */
+  h += '<section class="card hero"><div class="hero-ring">' + ringSVG(o.pct, o.status, t) + '<div class="hero-num"><b>' + (o.pct === null ? '--' : fpw(o.pct)) + '<small>%</small></b><span>overall</span></div></div>' +
+    '<div class="hero-main"><p class="eyebrow">Hour-wise attendance until ' + esc(fmtDate(A.asOf, true)) + '</p>' +
+    '<h2 class="hero-line">' + o.att + ' of ' + o.held + ' class hours attended</h2>' +
+    '<div class="hero-badges">' + badge(o.status, t) + '<span class="muted">Minimum ' + t + '%. The tick on the ring marks it.</span></div>' +
+    '<p class="hero-adv">' + esc(advice(o, t, 'hour')) + '.</p>' +
+    (A.asOf < RANGE_END ? '<p class="muted small">If you attend every remaining class: <b>' + fp(o.best) + '%</b> at semester end. With your planned absences: <b>' + fp(o.planned) + '%</b>.</p>' : '') +
+    '</div><div class="hero-side">' + asOfControl() + '<p class="muted small">Batch <b>' + esc(S.settings.batch) + '</b> decides which lab you attend on Thursday and Friday periods 3 and 4.</p></div></section>';
+  /* stats */
+  h += '<section class="stats" aria-label="Totals"><div class="stat"><span>Hours held</span><b>' + o.held + '</b></div><div class="stat"><span>Attended</span><b>' + o.att + '</b></div><div class="stat"><span>Missed</span><b>' + o.missed + '</b></div>' +
+    '<div class="stat"><span>Cancelled, ignored</span><b>' + o.cancelled + '</b></div><div class="stat"><span>Days fully absent</span><b>' + A.absentDays + '</b></div><div class="stat"><span>Teaching days so far</span><b>' + A.teachingDays + '</b></div></section>';
+  /* alerts */
+  h += '<section class="card pad"><div class="sec-head"><h2>Attendance alerts</h2><span class="muted small">Warns when a subject drops below ' + t + '%</span></div>';
+  if (!bad.length && !edge.length) h += '<p class="alert-ok">' + ic('check') + 'Every subject is comfortably above ' + t + '%.</p>';
+  else {
+    h += '<ul class="alerts">';
+    bad.forEach(function (r) { h += '<li class="al below">' + ic('alert') + '<div><b>' + esc(r.s.short) + ' is at ' + fp(r.pct) + '%</b>, below your ' + t + '% minimum. ' + esc(advice(r, t)) + '.</div></li>'; });
+    edge.forEach(function (r) { h += '<li class="al edge">' + ic('alert') + '<div><b>' + esc(r.s.short) + ' is at ' + fp(r.pct) + '%</b>, with little room for misses. ' + esc(advice(r, t)) + '.</div></li>'; });
+    h += '</ul>';
+  }
+  h += '</section>';
+  /* subjects */
+  h += '<section><div class="sec-head"><h2>By subject</h2><span class="muted small">Each class hour counts toward its own subject</span></div><div class="subj-grid">';
+  A.rows.forEach(function (r) {
+    h += '<article class="card subj st-' + r.status + '"><header>' + dot(r.s) + '<div class="subj-t"><h3>' + esc(r.s.short) + '</h3><p>' + esc(r.s.name) + '</p></div><div class="subj-pct">' + (r.pct === null ? '--' : fp(r.pct)) + '<small>%</small></div></header>' +
+      meter(r.pct, t, r.status) +
+      '<div class="subj-row"><span class="num">' + r.att + ' / ' + r.held + ' attended</span>' + badge(r.status, t) + '</div>' +
+      '<p class="advice">' + esc(advice(r, t)) + '</p>' +
+      ((r.replacedIn || r.cancelled || r.replacedOut) ? '<p class="muted small">' + [r.cancelled ? plural(r.cancelled, 'class') + ' cancelled' : '', r.replacedOut ? plural(r.replacedOut, 'class') + ' replaced by other subjects' : '', r.replacedIn ? plural(r.replacedIn, 'class') + ' taken over from others' : ''].filter(Boolean).join(' · ') + '</p>' : '') +
+      '</article>';
+  });
+  h += '</div></section>';
+  /* today */
+  const fd = focusDay();
+  h += '<section class="card pad"><div class="sec-head"><h2>' + (fd === TODAY ? 'Today' : 'Nearest teaching day') + ': ' + esc(fmtDate(fd, true)) + '</h2><span class="muted small">Untick a class you missed. Everything defaults to present.</span></div>' + dayEditor(fd) + '</section>';
+  return h + '</div>';
+}
+
+/* ---------- attendance (day checklist) ---------- */
+function monthGroups() {
+  const g = {}, order = [];
+  allDays().forEach(function (k) {
+    let ym = k.slice(0, 7);
+    if (k === RANGE_START) ym = '2026-09';
+    if (k === RANGE_END) ym = '2026-12';
+    if (!g[ym]) { g[ym] = { id: ym, label: MON[+ym.slice(5) - 1], keys: [] }; order.push(ym); }
+    g[ym].keys.push(k);
+  });
+  return order.map(function (i) { return g[i]; });
+}
+function groupOf(k) {
+  const gs = monthGroups();
+  for (let i = 0; i < gs.length; i++) if (gs[i].keys.indexOf(k) >= 0) return gs[i].id;
+  return gs[0].id;
+}
+function daySummaryText(sm) {
+  const e = sm.e;
+  if (e.kind === 'off') return '<span class="muted">No classes counted</span>';
+  if (e.kind === 'event') return '<span class="' + (e.att ? 'pres' : 'abs') + '">' + (e.att ? 'Attended: full credit' : 'Did not attend') + '</span>';
+  const parts = [];
+  parts.push('<span class="' + (sm.absent ? 'abs' : 'pres') + '">' + sm.present + '/' + sm.counted + ' attended</span>');
+  if (sm.cancelled) parts.push('<span class="muted">' + sm.cancelled + ' cancelled</span>');
+  if (sm.replaced) parts.push('<span class="muted">' + sm.replaced + ' replaced</span>');
+  if (sm.extras) parts.push('<span class="muted">+' + sm.extras + ' extra</span>');
+  return parts.join('<i class="sep"></i>');
+}
+function typeChip(e) {
+  const T = TYPES[e.type];
+  if (e.type === 'regular' || e.type === 'noclass') return '';
+  return '<span class="tchip ' + typeCls(e.type) + '">' + esc(e.code || T.code || T.label) + '</span>';
+}
+function typeCls(type) {
+  return { holiday: 'ty-holiday', declared: 'ty-declared', test: 'ty-test', labtest: 'ty-labtest', event: 'ty-event', testatt: 'ty-info', bluebook: 'ty-info', asd: 'ty-info', feedback: 'ty-info', noclass: 'ty-none' }[type] || '';
+}
+function viewAttendance() {
+  const gs = monthGroups();
+  if (!UI.attGroup) UI.attGroup = groupOf(UI.openDay || focusDay());
+  if (UI.openDay === null && UI.attGroup === groupOf(focusDay())) UI.openDay = focusDay();
+  const g = gs.filter(function (x) { return x.id === UI.attGroup; })[0] || gs[0];
+  let h = '<div class="stack"><section class="card pad"><div class="sec-head"><h2>Daily attendance</h2><span class="muted small">Open a day to mark classes. Everything is present unless you change it.</span></div>';
+  h += '<div class="seg" role="tablist" aria-label="Month">' + gs.map(function (x) { return '<button role="tab" aria-selected="' + (x.id === g.id) + '" class="' + (x.id === g.id ? 'on' : '') + '" data-act="att-group" data-g="' + x.id + '">' + x.label + (x.id === '2026-09' ? ' <small>from 31 Aug</small>' : '') + (x.id === '2026-12' ? ' <small>to 1 Jan</small>' : '') + '</button>'; }).join('') + '</div>';
+  h += '<div class="days">';
+  g.keys.forEach(function (k) {
+    if (wd(k) === 6 && UI.openDay !== k && !S.days[k]) return;
+    const sm = daySummary(S, k), e = sm.e, open = UI.openDay === k;
+    h += '<div class="day' + (open ? ' open' : '') + (k === TODAY ? ' is-today' : '') + ' ' + (e.kind === 'off' ? 'off' : '') + '" id="day-' + k + '">' +
+      '<button class="day-head" data-act="toggle-day" data-date="' + k + '" aria-expanded="' + open + '" aria-controls="de-' + k + '">' +
+      '<span class="dnum"><b>' + dateOf(k).getDate() + '</b><small>' + WD[wd(k)] + '</small></span>' +
+      '<span class="dtitle"><span class="dl">' + esc(e.label || TYPES[e.type].label) + '</span>' + typeChip(e) + (k === TODAY ? '<span class="tchip today-chip">Today</span>' : '') +
+      (e.tt !== null && e.tt !== undefined && e.tt !== wd(k) && e.kind !== 'off' ? '<span class="tchip ttchip">' + WD[e.tt] + ' timetable</span>' : '') + '</span>' +
+      '<span class="dsum">' + daySummaryText(sm) + '</span>' + ic('chev', 'chev') + '</button>' +
+      (open ? '<div class="day-body" id="de-' + k + '">' + dayEditor(k) + '</div>' : '') + '</div>';
+  });
+  return h + '</div></section></div>';
+}
+
+/* ---------- the day editor (checklist) ---------- */
+const OFF_WHY = {
+  holiday: 'Holiday. The whole day is ignored, so your attendance is not affected.',
+  declared: 'Declared holiday. The whole day is ignored, so your attendance is not affected.',
+  test: 'Internal test day. Regular classes are not counted. Change the day type below if classes were held.',
+  labtest: 'Lab test day. Regular classes are not counted. Change the day type below if classes were held.',
+  noclass: 'No classes are scheduled on this day. Change the day type below if a class was held.'
+};
+function dayEditor(k) {
+  const e = eff(S, k), b = e.base, ov = S.days[k] || {};
+  const fid = function (n) { return n + '-' + k; };
+  let h = '<div class="de" data-date="' + k + '">';
+  h += '<div class="de-top"><div class="fld"><label for="' + fid('ty') + '">Day type</label><select id="' + fid('ty') + '" class="in" data-act="d-type" data-fid="' + fid('ty') + '">' +
+    TYPE_ORDER.map(function (t) { return opt(t, TYPES[t].label, t === e.type); }).join('') + '</select></div>' +
+    '<div class="fld grow"><label for="' + fid('lb') + '">Label</label><input id="' + fid('lb') + '" class="in" type="text" maxlength="80" value="' + esc(e.label) + '" placeholder="Event or note, for example: exam moved here" data-act="d-label"></div>' +
+    '<div class="fld"><label for="' + fid('tt') + '">Follows timetable of</label><select id="' + fid('tt') + '" class="in" data-act="d-tt" data-fid="' + fid('tt') + '">' +
+    opt('', 'Calendar default: ' + (b.tt === null ? 'none' : WDL[b.tt]), ov.tt === undefined) + [0, 1, 2, 3, 4].map(function (i) { return opt(String(i), WDL[i], ov.tt === i); }).join('') + opt('none', 'No timetable', ov.tt === null) + '</select></div></div>';
+  if (b.note) h += '<p class="de-note">' + ic('info') + '<span>' + esc(b.note) + '</span></p>';
+  if (e.kind === 'off') {
+    h += '<p class="de-off">' + ic('minus') + '<span>' + esc(OFF_WHY[e.type] || OFF_WHY.noclass) + '</span></p>';
+  } else if (e.kind === 'event') {
+    h += '<label class="chk-line big"><input type="checkbox" data-act="d-event-att" data-fid="' + fid('ev') + '"' + (e.att ? ' checked' : '') + '><span>I attended college on this day</span></label>' +
+      '<p class="muted small">College programme: every class scheduled today is credited as attended when this is ticked. Untick it if you stayed away.</p>';
+    h += classList(k, e, true);
+  } else {
+    h += '<div class="de-actions"><button class="btn sm" data-act="d-allabs">Mark whole day absent</button><button class="btn sm" data-act="d-allpres">Mark whole day present</button></div>';
+    h += classList(k, e, false);
+  }
+  /* extra classes */
+  h += '<div class="de-extra"><h4>Extra classes</h4>';
+  e.extras.forEach(function (x, i) {
+    const s = subj(S, x.sub);
+    h += '<div class="ex-row"><span class="ex-s">' + (s ? dot(s) + esc(s.short) : 'Removed subject') + '</span><label class="chk-line"><input type="checkbox" data-act="d-extra-att" data-i="' + i + '" data-fid="' + fid('xa' + i) + '"' + (x.abs ? '' : ' checked') + '><span>Attended</span></label><button class="btn sm ghost" data-act="d-extra-del" data-i="' + i + '" aria-label="Remove extra class">' + ic('trash') + '</button></div>';
+  });
+  h += '<div class="ex-add"><select class="in" id="' + fid('xs') + '" aria-label="Subject of the extra class">' + subjOptions('') + '</select><button class="btn sm" data-act="d-extra-add">' + ic('plus') + 'Add extra class</button></div>' +
+    '<p class="muted small">For a class held outside the timetable, such as a makeup class on a Saturday. It adds one hour to that subject.</p></div>';
+  /* move + reset */
+  const special = e.type !== 'regular' && e.type !== 'noclass';
+  if (special) {
+    h += '<details class="de-move"><summary>' + ic('swap') + 'Prepone or postpone this ' + esc(TYPES[e.type].label.toLowerCase()) + '</summary><div class="mv-row"><label for="' + fid('mv') + '">New date</label><input type="date" class="in" id="' + fid('mv') + '" min="' + RANGE_START + '" max="' + RANGE_END + '"><button class="btn sm primary" data-act="d-move">Move it</button></div>' +
+      '<p class="muted small">The new date takes this day type and label. This date becomes a normal ' + (wd(k) >= 5 ? 'no-class' : 'teaching') + ' day.</p></details>';
+  }
+  if (ov.type !== undefined || ov.label !== undefined || ov.tt !== undefined || ov.code !== undefined) {
+    h += '<button class="btn sm ghost" data-act="d-reset">' + ic('undo') + 'Reset day type to the college calendar</button>';
+  }
+  return h + '</div>';
+}
+function classList(k, e, readonly) {
+  const rows = dayPeriods(S, e);
+  if (!rows.length) return '<p class="de-off">' + ic('minus') + '<span>No timetable is set for this day, so there are no classes to mark. Pick a timetable above.</span></p>';
+  let h = '<ul class="cls-list">';
+  rows.forEach(function (r, i) {
+    const p = r.p, st = r.st || {}, s = r.subj ? subj(S, r.subj) : null;
+    const when = '<span class="when"><b>' + esc(p.label) + '</b><small>' + esc(p.time) + '</small></span>';
+    if (!s && !(st.x === 's')) {
+      const nm = r.slot && r.slot.k === 'n' ? (r.slot.l || 'Free') : (r.slot && r.slot.k === 'b' ? 'No lab for batch ' + S.settings.batch : 'Free');
+      h += '<li class="cls none">' + '<span class="chk-ph"></span>' + when + '<span class="what"><span class="muted">' + esc(nm) + ' (not counted)</span></span></li>';
+    } else {
+      const cancelled = st.x === 'c', replaced = st.x === 's';
+      const present = !st.abs;
+      const cls = readonly ? 'cls' : 'cls ' + (cancelled ? 'cancelled' : replaced ? 'replaced' : st.abs ? 'absent' : 'present');
+      h += '<li class="' + cls + '">';
+      if (readonly) h += '<span class="chk-ph ok">' + ic('check') + '</span>';
+      else h += '<label class="chk"><input type="checkbox" data-act="d-slot-att" data-pid="' + p.id + '" data-fid="a-' + k + '-' + p.id + '"' + (present && !cancelled ? ' checked' : '') + (cancelled ? ' disabled' : '') + ' aria-label="Attended period ' + esc(p.label) + (s ? ', ' + esc(s.short) : '') + '"></label>';
+      h += when + '<span class="what">' + (s ? dot(s) + '<b>' + esc(s.short) + '</b><span class="muted nm">' + esc(s.name) + '</span>' : '<b>Extra</b>') + '</span>';
+      if (!readonly) {
+        h += '<span class="stat-sel"><select class="in sm" data-act="d-slot-x" data-pid="' + p.id + '" data-fid="x-' + k + '-' + p.id + '" aria-label="What happened to period ' + esc(p.label) + '">' +
+          opt('', 'Held as scheduled', !st.x) + opt('c', 'Cancelled', cancelled) + opt('s', 'Taken by another subject', replaced) + '</select>';
+        if (replaced) h += '<select class="in sm" data-act="d-slot-sub" data-pid="' + p.id + '" data-fid="s-' + k + '-' + p.id + '" aria-label="Subject that replaced this class">' + subjOptions(st.sub, 'Which subject?') + '</select>';
+        h += '</span>';
+        if (replaced && !st.sub) h += '<span class="hint">Pick the subject that was taught. The hour counts toward it, and ' + esc(s ? s.short : 'this class') + ' is not affected.</span>';
+        if (replaced && st.sub) h += '<span class="hint">Tick means you attended the ' + esc(subj(S, st.sub) ? subj(S, st.sub).short : '') + ' class. ' + esc(s ? s.short : '') + ' is not affected.</span>';
+        if (cancelled) h += '<span class="hint">Cancelled classes are ignored.</span>';
+      }
+      h += '</li>';
+    }
+    if (p.brk) h += '<li class="brk">' + esc(p.brk) + '</li>';
+  });
+  return h + '</ul>';
+}
+
+/* ---------- calendar ---------- */
+const LEGEND = [
+  ['', 'Regular day', ''], ['ty-holiday', 'H', 'Holiday'], ['ty-declared', 'DH', 'Declared holiday'], ['ty-test', 'T1 T2 T3', 'Internal tests'],
+  ['ty-labtest', 'LT', 'Lab test'], ['ty-event', 'EV', 'College event'], ['ty-info', 'TA', 'Test attendance'], ['ty-info', 'BV', 'Blue book verification'],
+  ['ty-info', 'ASD', 'Attendance and sessional display'], ['ty-info', 'FFB', 'Faculty feedback']
+];
+function viewCalendar() {
+  let h = '<div class="stack"><section class="card pad"><div class="sec-head"><h2>Academic calendar, 31 Aug 2026 to 1 Jan 2027</h2><span class="muted small">Tap a date to open its class checklist</span></div>';
+  h += '<ul class="legend">' + LEGEND.map(function (l) { return '<li><span class="tchip ' + l[0] + '">' + l[1] + '</span>' + (l[2] ? '<span>' + l[2] + '</span>' : '') + '</li>'; }).join('') + '</ul>';
+  h += '<div class="cal-scroll"><div class="cal" role="grid" aria-label="Academic calendar by week"><div class="cal-row head" role="row"><span class="cal-wk">Week</span>' + WD.map(function (d) { return '<span role="columnheader">' + d + '</span>'; }).join('') + '<span class="cal-ct" title="Days with classes or a college event">Days</span></div>';
+  for (let w = 0; ; w++) {
+    const mon = addDays(RANGE_START, 7 * w);
+    if (mon > RANGE_END) break;
+    let cells = '', count = 0;
+    for (let i = 0; i < 7; i++) {
+      const k = addDays(mon, i);
+      if (!inRange(k)) { cells += '<span class="cal-day empty" role="gridcell"></span>'; continue; }
+      const sm = daySummary(S, k), e = sm.e;
+      if (e.kind !== 'off') count++;
+      const showMo = dateOf(k).getDate() === 1 || k === RANGE_START;
+      let tip = fmtDate(k) + ': ' + (e.label || TYPES[e.type].label);
+      if (sm.absent) tip += ' (' + sm.absent + ' absent)';
+      cells += '<button class="cal-day ' + typeCls(e.type) + (k === TODAY ? ' today' : '') + (i === 6 ? ' sun' : '') + '" role="gridcell" data-act="goto-day" data-date="' + k + '" title="' + esc(tip) + '" aria-label="' + esc(tip) + '">' +
+        '<span class="n">' + dateOf(k).getDate() + (showMo ? '<em>' + MON[dateOf(k).getMonth()] + '</em>' : '') + '</span>' +
+        ((e.code || (e.type !== 'regular' && e.type !== 'noclass')) ? '<span class="cc">' + esc(e.code || TYPES[e.type].code) + '</span>' : '') +
+        (e.kind !== 'off' && e.tt !== null && e.tt !== undefined && e.tt !== wd(k) ? '<span class="ttm">' + WD[e.tt] + ' TT</span>' : '') +
+        (sm.absent ? '<i class="mk abs" aria-hidden="true"></i>' : (sm.cancelled || sm.replaced ? '<i class="mk chg" aria-hidden="true"></i>' : '')) + '</button>';
+    }
+    const m1 = MON[dateOf(mon).getMonth()], m2 = MON[dateOf(addDays(mon, 5)).getMonth()];
+    h += '<div class="cal-row" role="row"><span class="cal-wk"><b>' + (5 + w) + '</b><small>' + (m1 === m2 ? m1 : m1 + '/' + m2) + '</small></span>' + cells + '<span class="cal-ct">' + count + '</span></div>';
+  }
+  h += '</div></div><p class="muted small legend-note"><i class="mk abs"></i> absent in at least one class <i class="mk chg"></i> class cancelled or replaced. "Wed TT" on a Saturday means that day follows the Wednesday timetable.</p></section>';
+  /* calendar check */
+  const T = calendarTotals(S);
+  const same = T.working === COLLEGE.working && T.teaching === COLLEGE.teaching && JSON.stringify(T.byDay) === JSON.stringify(COLLEGE.byDay);
+  h += '<section class="card pad"><div class="sec-head"><h2>Calendar check</h2><span class="muted small">' + (same ? 'Matches the totals printed on the college calendar' : 'You have edited the calendar, so it differs from the printed totals') + '</span></div>' +
+    '<div class="tbl-wrap"><table class="tbl"><thead><tr><th></th><th class="r">Working days</th><th class="r">Teaching days</th>' + WD.slice(0, 5).map(function (d) { return '<th class="r">' + d + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    '<tr><th scope="row">College calendar</th><td class="r">' + COLLEGE.working + '</td><td class="r">' + COLLEGE.teaching + '</td>' + COLLEGE.byDay.map(function (n) { return '<td class="r">' + n + '</td>'; }).join('') + '</tr>' +
+    '<tr><th scope="row">This app</th><td class="r">' + T.working + '</td><td class="r">' + T.teaching + '</td>' + T.byDay.map(function (n, i) { return '<td class="r' + (n !== COLLEGE.byDay[i] ? ' diff' : '') + '">' + n + '</td>'; }).join('') + '</tr></tbody></table></div>' +
+    '<p class="muted small">Working days exclude holidays. Teaching days also exclude internal tests and lab tests. The weekday columns count Saturdays under the timetable they follow.</p></section></div>';
+  return h;
+}
+
+
+
+'use strict';
+/* =====================================================================
+   Present: UI, part 2 (marks, targets, timetable editor, export, events, boot)
+   ===================================================================== */
+
+/* ---------- marks ---------- */
+const MARK_COLS = [['ia1', 'IA 1', 25], ['ia2', 'IA 2', 25], ['ia3', 'IA 3', 25], ['asg', 'Assignment', 10], ['prj', 'Project / test / lab', 15], ['ext', 'External', 100]];
+function viewMarks() {
+  let h = '<div class="stack"><section class="stats marks-stats" aria-label="CGPA summary"><div class="stat big"><span data-out="cgpa-label">CGPA</span><b data-out="cgpa">-</b></div>' +
+    '<div class="stat"><span>Subjects with all marks in</span><b data-out="complete">-</b></div><div class="stat"><span>Average internal (of 25)</span><b data-out="avgint">-</b></div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Marks</h2><span class="muted small">Leave a box empty until you have the mark</span></div>';
+  h += '<div class="tbl-wrap"><table class="tbl marks"><thead><tr><th rowspan="2" class="l">Subject</th><th colspan="3" class="grp">Internal tests</th><th colspan="2" class="grp">Assignments and projects</th><th class="grp">External</th><th colspan="5" class="grp res">Result</th></tr><tr>';
+  MARK_COLS.forEach(function (c) { h += '<th class="r">' + c[1] + '<small>/' + c[2] + '</small></th>'; });
+  h += '<th class="r res">Internal<small>/25</small></th><th class="r res">Asg + proj<small>/25</small></th><th class="r res">External<small>/50</small></th><th class="r res">Total<small>/100</small></th><th class="r res">Grade pt<small>/10</small></th></tr></thead><tbody>';
+  S.subjects.forEach(function (s) {
+    const m = S.marks[s.id] || {};
+    h += '<tr><th scope="row" class="l"><span class="subj-cell">' + dot(s) + '<span><b>' + esc(s.short) + '</b><small>' + esc(s.name) + '</small></span></span></th>';
+    MARK_COLS.forEach(function (c) {
+      h += '<td class="r"><input class="mk-in" type="number" inputmode="decimal" min="0" max="' + c[2] + '" step="any" data-act="m-in" data-sid="' + esc(s.id) + '" data-f="' + c[0] + '" value="' + (m[c[0]] === undefined ? '' : esc(m[c[0]])) + '" aria-label="' + esc(s.short + ' ' + c[1] + ' out of ' + c[2]) + '"></td>';
+    });
+    ['internal', 'ap', 'ext50', 'total', 'gp'].forEach(function (k) { h += '<td class="r res out" data-out="' + esc(s.id) + ':' + k + '">-</td>'; });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  h += '<div class="formula"><p><b>How it is calculated.</b> Internal = average of the three internal tests (each out of 25). Assignment is out of 10 and the project, class test or lab is out of 15. The external exam is out of 100 and is halved to 50. Total = internal + assignment and project + external/2, out of 100. Grade point = total / 10, and CGPA is the average of the grade points across your subjects.</p>' +
+    '<p class="muted small">Subjects count equally by default. Change a subject\'s CGPA weight in the Timetable tab (a weight of 0 leaves it out). While marks are missing, the grade point is an estimate that assumes the missing parts score the same percentage as the parts you have entered, and it is shown with a ~.</p></div></section></div>';
+  return h;
+}
+function setOut(key, html) { const el = document.querySelector('[data-out="' + key + '"]'); if (el) el.innerHTML = html; }
+function refreshMarks() {
+  let sumInt = 0, nInt = 0;
+  S.subjects.forEach(function (s) {
+    const r = markRow(S.marks[s.id]);
+    setOut(s.id + ':internal', r.internal === null ? '-' : fm(r.internal) + (r.nT < 3 ? '<sup title="Average of the tests entered so far">' + r.nT + '/3</sup>' : ''));
+    if (r.internal !== null) { sumInt += r.internal; nInt++; }
+    setOut(s.id + ':ap', r.ap === null ? '-' : fm(r.ap));
+    setOut(s.id + ':ext50', r.ext50 === null ? '-' : fm(r.ext50));
+    setOut(s.id + ':total', r.total !== null ? '<b>' + fm(r.total) + '</b>' : (r.est === null ? '-' : '<span title="Estimate: missing parts assumed at the same percentage as the parts entered">~' + fm(r.est) + '</span>'));
+    setOut(s.id + ':gp', r.total !== null ? '<b>' + fp(r.total / 10, 2) + '</b>' : (r.est === null ? '-' : '<span title="Estimate">~' + fp(r.est / 10, 2) + '</span>'));
+  });
+  const cg = cgpaOf(S);
+  setOut('cgpa', cg.projected === null ? '-' : fp(cg.projected, 2) + '<small> / 10</small>');
+  setOut('cgpa-label', cg.final !== null ? 'Final CGPA' : (cg.projected === null ? 'CGPA' : 'Projected CGPA (some marks missing)'));
+  setOut('complete', cg.nComplete + ' of ' + cg.nIncl);
+  setOut('avgint', nInt ? fm(sumInt / nInt) : '-');
+}
+
+/* ---------- targets ---------- */
+function pill(kind, text) { return '<span class="badge ' + kind + '">' + ic(kind === 'ok' ? 'check' : (kind === 'none' ? 'minus' : 'alert')) + esc(text) + '</span>'; }
+function viewTargets() {
+  const T = S.targets;
+  let h = '<div class="stack">';
+  h += '<section class="card pad"><div class="sec-head"><h2>Target CGPA</h2><span class="muted small">Works out what you still need, using the marks you have entered</span></div>' +
+    '<div class="tg-controls"><div class="fld"><label for="tg-cgpa">Target CGPA</label><input id="tg-cgpa" class="in" type="number" min="0" max="10" step="0.1" value="' + esc(T.cgpa) + '" data-act="t-in" data-f="cgpa"></div>' +
+    '<div class="fld"><label for="tg-mode">Work out</label><select id="tg-mode" class="in" data-act="t-sel" data-f="mode" data-fid="tg-mode">' + opt('ext', 'External marks I need', T.mode === 'ext') + opt('cie', 'Internal and assignment marks I need', T.mode === 'cie') + '</select></div>' +
+    (T.mode === 'cie' ? '<div class="fld"><label for="tg-exp">Expected external (out of 100)</label><input id="tg-exp" class="in" type="number" min="0" max="100" step="1" value="' + esc(T.exp) + '" data-act="t-in" data-f="exp"></div>' : '') +
+    '<div class="fld"><label for="tg-pend">Marks not yet entered count as</label><select id="tg-pend" class="in" data-act="t-sel" data-f="pend" data-fid="tg-pend">' + opt('same', 'Same percentage as the marks I have', T.pend === 'same') + opt('zero', 'Zero (worst case)', T.pend === 'zero') + '</select></div></div>' +
+    '<div id="tg-a" aria-live="polite"></div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Target internal marks</h2><span class="muted small">Internal is the average of three tests, out of 25</span></div>' +
+    '<div class="tg-controls"><div class="fld"><label for="tg-int">Target internal (out of 25)</label><input id="tg-int" class="in" type="number" min="0" max="25" step="0.5" value="' + esc(T.intT) + '" data-act="t-in" data-f="intT"></div></div><div id="tg-b" aria-live="polite"></div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Target assignment and project marks</h2><span class="muted small">Assignment /10 plus project, class test or lab /15</span></div>' +
+    '<div class="tg-controls"><div class="fld"><label for="tg-ap">Target (out of 25)</label><input id="tg-ap" class="in" type="number" min="0" max="25" step="0.5" value="' + esc(T.apT) + '" data-act="t-in" data-f="apT"></div></div><div id="tg-c" aria-live="polite"></div></section>';
+  return h + '</div>';
+}
+function renderTargets() {
+  const T = S.targets;
+  /* A: target CGPA */
+  const tg = clamp(parseFloat(T.cgpa) || 0, 0, 10);
+  let rows = '', sw = 0, sc = 0, anyKnown = false;
+  S.subjects.forEach(function (s) {
+    const w = Number(s.credits); if (!(w > 0)) return;
+    const c = cieEstimate(S.marks[s.id], T.pend);
+    if (!c.known) { rows += '<tr><th scope="row" class="l">' + dot(s) + esc(s.short) + '</th><td class="r">-</td><td class="r">-</td><td>' + pill('none', 'Enter some marks first') + '</td></tr>'; return; }
+    anyKnown = true; sw += w; sc += w * c.cie;
+    let verdict, val;
+    if (T.mode === 'ext') {
+      const need = neededExternal(tg, c.cie); val = need <= 0 ? '0' : fm(need) + ' / 100';
+      verdict = need <= 0 ? pill('ok', 'Already secured') : (need <= 100 ? pill(need > 85 ? 'edge' : 'ok', 'Score ' + fm(need) + ' of 100 in the external') : pill('below', 'Out of reach: best grade point is ' + fp((c.cie + 50) / 10, 2)));
+    } else {
+      const need = 10 * tg - (parseFloat(T.exp) || 0) / 2; val = need <= 0 ? '0' : fm(need) + ' / 50';
+      verdict = need <= 0 ? pill('ok', 'Any internal score works') : (need <= 50 ? pill(need > c.cie ? 'edge' : 'ok', (need > c.cie ? 'Need ' + fm(need - c.cie) + ' more than now' : 'Already on track')) : pill('below', 'Not possible with that external score'));
+    }
+    rows += '<tr><th scope="row" class="l">' + dot(s) + esc(s.short) + '</th><td class="r">' + fm(c.cie) + ' / 50' + (c.complete ? '' : '<sup title="Some internal parts are not entered yet">est</sup>') + '</td><td class="r">' + val + '</td><td>' + verdict + '</td></tr>';
+  });
+  let a = '';
+  if (!anyKnown) a = '<p class="muted">Enter your internal test and assignment marks in the Marks tab and this table fills in.</p>';
+  else {
+    const avg = sc / sw;
+    const best = (avg + 50) / 10;
+    let sum;
+    if (T.mode === 'ext') {
+      const need = neededExternal(tg, avg);
+      sum = need <= 0 ? 'Your internals alone already give a CGPA of ' + fp(avg / 10 * 2, 2) + ' or better, so the target is covered.' :
+        (need <= 100 ? 'Across all subjects you need an average of <b>' + fm(need) + ' out of 100</b> in the externals to finish on ' + fp(tg, 1) + '.' : 'A CGPA of ' + fp(tg, 1) + ' is out of reach with your current internals. The best you can reach is <b>' + fp(best, 2) + '</b>.');
+    } else {
+      const need = 10 * tg - (parseFloat(T.exp) || 0) / 2;
+      sum = need <= 0 ? 'With that external score you reach the target whatever your internals are.' : (need <= 50 ? 'To finish on ' + fp(tg, 1) + ' with ' + fm(parseFloat(T.exp) || 0) + '/100 in the externals you need <b>' + fm(need) + ' out of 50</b> in internals plus assignments and projects in every subject.' : 'That external score cannot reach ' + fp(tg, 1) + ' even with full internals.');
+    }
+    a = '<p class="tg-sum">' + sum + '</p><div class="tbl-wrap"><table class="tbl"><thead><tr><th class="l">Subject</th><th class="r">Internal + assignment so far</th><th class="r">' + (T.mode === 'ext' ? 'External needed' : 'Internal + assignment needed') + '</th><th>Verdict</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<p class="muted small">To land on ' + fp(tg, 1) + ' in a subject, its total must reach ' + fm(tg * 10) + ' out of 100. Total = internal + assignment + external / 2.</p>';
+  }
+  $('#tg-a').innerHTML = a;
+  /* B: target internal */
+  const ti = clamp(parseFloat(T.intT) || 0, 0, 25);
+  let b = '<div class="tbl-wrap"><table class="tbl"><thead><tr><th class="l">Subject</th><th class="r">IA 1</th><th class="r">IA 2</th><th class="r">IA 3</th><th>What you need</th></tr></thead><tbody>';
+  S.subjects.forEach(function (s) {
+    const m = S.marks[s.id] || {}, r = neededTests(m, ti); let v;
+    if (r.pending === 0) v = pill(r.met ? 'ok' : 'below', 'Final internal ' + fm(r.current) + ' / 25: ' + (r.met ? 'target met' : 'below target'));
+    else if (r.need <= 0) v = pill('ok', 'Already secured, any score works');
+    else if (r.need > 25) v = pill('below', 'Out of reach: would need ' + fm(r.need) + ' in each pending test, the maximum is 25');
+    else v = pill(r.need > 21 ? 'edge' : 'ok', 'Score ' + fm(r.need) + ' / 25' + (r.pending > 1 ? ' on average in the ' + r.pending + ' tests still to come' : ' in the remaining test'));
+    b += '<tr><th scope="row" class="l">' + dot(s) + esc(s.short) + '</th>' + ['ia1', 'ia2', 'ia3'].map(function (f) { return '<td class="r">' + (num(m[f]) === null ? '-' : fm(m[f])) + '</td>'; }).join('') + '<td>' + v + '</td></tr>';
+  });
+  $('#tg-b').innerHTML = b + '</tbody></table></div>';
+  /* C: target assignment + project */
+  const ta = clamp(parseFloat(T.apT) || 0, 0, 25);
+  let c = '<div class="tbl-wrap"><table class="tbl"><thead><tr><th class="l">Subject</th><th class="r">Assignment</th><th class="r">Project / test / lab</th><th>What you need</th></tr></thead><tbody>';
+  S.subjects.forEach(function (s) {
+    const m = S.marks[s.id] || {}, r = neededAP(m, ta); let v;
+    if (r.pendMax === 0) v = pill(r.met ? 'ok' : 'below', 'Final ' + fm(r.got) + ' / 25: ' + (r.met ? 'target met' : 'below target'));
+    else if (r.need <= 0) v = pill('ok', 'Already secured');
+    else if (r.need > r.pendMax) v = pill('below', 'Out of reach: ' + fm(r.need) + ' needed, only ' + r.pendMax + ' left to earn');
+    else v = pill(r.need > r.pendMax * 0.85 ? 'edge' : 'ok', 'Earn ' + fm(r.need) + ' of the ' + r.pendMax + ' still open (' + r.parts.join(' + ') + ')');
+    c += '<tr><th scope="row" class="l">' + dot(s) + esc(s.short) + '</th><td class="r">' + (num(m.asg) === null ? '-' : fm(m.asg)) + '</td><td class="r">' + (num(m.prj) === null ? '-' : fm(m.prj)) + '</td><td>' + v + '</td></tr>';
+  });
+  $('#tg-c').innerHTML = c + '</tbody></table></div>';
+}
+
+/* ---------- timetable editor ---------- */
+function viewTimetable() {
+  let h = '<div class="stack">';
+  h += '<section class="card pad"><div class="sec-head"><h2>Subjects</h2><span class="muted small">Rename, reorder, add or remove. Changes apply to the whole semester.</span></div><div id="subj-ed">' + subjEditor() + '</div>' +
+    '<div class="row-end"><button class="btn" data-act="s-add">' + ic('plus') + 'Add subject</button></div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Weekly timetable</h2><span class="muted small">Each box is one class hour that repeats every week</span></div><div id="tt-ed">' + ttEditor() + '</div>' +
+    '<div class="row-end"><button class="btn" data-act="p-add">' + ic('plus') + 'Add period</button></div>' +
+    '<p class="muted small">Choose "Batch lab" for a slot where each batch attends a different subject. Choose "Not counted" for tutorial, library or free hours. Saturdays follow whichever weekday the calendar names; set that on the day itself.</p></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Batches</h2><span class="muted small">Your batch decides which lab you attend</span></div><div class="tg-controls"><div class="fld"><label for="batches">Batch names, separated by commas</label><input id="batches" class="in" type="text" value="' + esc(S.settings.batches.join(', ')) + '" data-act="batches"></div>' +
+    '<div class="fld"><label for="batch-sel2">Your batch</label><select id="batch-sel2" class="in" data-act="batch" data-fid="batch-sel2">' + S.settings.batches.map(function (b) { return opt(b, b, b === S.settings.batch); }).join('') + '</select></div></div>' +
+    '<div class="row-end"><button class="btn danger-o" data-act="tt-reset">' + ic('undo') + 'Restore the college timetable and subjects</button></div></section></div>';
+  return h;
+}
+function subjEditor() {
+  let h = '';
+  S.subjects.forEach(function (s, i) {
+    h += '<div class="sub-row" data-sid="' + esc(s.id) + '"><div class="sub-ord"><button class="btn sm ghost" data-act="s-up" aria-label="Move ' + esc(s.short) + ' up"' + (i === 0 ? ' disabled' : '') + '>' + ic('up') + '</button><button class="btn sm ghost" data-act="s-down" aria-label="Move ' + esc(s.short) + ' down"' + (i === S.subjects.length - 1 ? ' disabled' : '') + '>' + ic('down') + '</button></div>' +
+      '<div class="sub-fields"><label class="fld sh">Short name<input class="in" type="text" maxlength="12" value="' + esc(s.short) + '" data-act="s-f" data-f="short"></label>' +
+      '<label class="fld nm">Subject name<input class="in" type="text" maxlength="120" value="' + esc(s.name) + '" data-act="s-f" data-f="name"></label>' +
+      '<label class="fld cd">Course code<input class="in" type="text" maxlength="40" value="' + esc(s.code) + '" data-act="s-f" data-f="code"></label>' +
+      '<label class="fld fc">Faculty<input class="in" type="text" maxlength="60" value="' + esc(s.faculty) + '" data-act="s-f" data-f="faculty"></label>' +
+      '<label class="fld wt">CGPA weight<input class="in" type="number" min="0" max="20" step="0.5" value="' + esc(s.credits) + '" data-act="s-f" data-f="credits"></label></div>' +
+      '<button class="btn sm ghost del" data-act="s-del" aria-label="Remove ' + esc(s.short) + '">' + ic('trash') + '</button></div>';
+  });
+  return h;
+}
+function ttCell(day, p) {
+  const slot = S.tt[day][p.id], kind = slot ? slot.k : 'n';
+  const v = kind === 's' ? 's:' + slot.s : (kind === 'b' ? 'b' : 'n');
+  let h = '<td><select class="in sm" data-act="tt-kind" data-day="' + day + '" data-pid="' + p.id + '" aria-label="' + WDL[day] + ' period ' + esc(p.label) + '">' + opt('n', 'Not counted', v === 'n') +
+    S.subjects.map(function (s) { return opt('s:' + s.id, s.short, v === 's:' + s.id); }).join('') + opt('b', 'Batch lab', v === 'b') + '</select>';
+  if (kind === 'b') h += S.settings.batches.map(function (b) { return '<label class="bt"><span>' + esc(b) + '</span><select class="in sm" data-act="tt-batch" data-day="' + day + '" data-pid="' + p.id + '" data-b="' + esc(b) + '" aria-label="' + esc(b) + ' lab subject">' + subjOptions(slot.m && slot.m[b], 'None') + '</select></label>'; }).join('');
+  else if (kind === 'n') h += '<input class="in sm" type="text" maxlength="12" placeholder="T, LIB..." value="' + esc(slot && slot.l || '') + '" data-act="tt-label" data-day="' + day + '" data-pid="' + p.id + '" aria-label="Label for the free hour">';
+  return h + '</td>';
+}
+function ttEditor() {
+  let h = '<div class="tt-scroll"><table class="tt"><thead><tr><th class="l">Day</th>';
+  S.periods.forEach(function (p, i) {
+    h += '<th><div class="p-head"><div class="p-btns"><button class="btn xs ghost" data-act="p-left" data-i="' + i + '" aria-label="Move period earlier"' + (i === 0 ? ' disabled' : '') + '>' + ic('left') + '</button><button class="btn xs ghost" data-act="p-right" data-i="' + i + '" aria-label="Move period later"' + (i === S.periods.length - 1 ? ' disabled' : '') + '>' + ic('right') + '</button><button class="btn xs ghost" data-act="p-del" data-i="' + i + '" aria-label="Remove period">' + ic('trash') + '</button></div>' +
+      '<input class="in xs" type="text" maxlength="4" value="' + esc(p.label) + '" data-act="p-f" data-i="' + i + '" data-f="label" aria-label="Period name">' +
+      '<input class="in xs" type="text" maxlength="20" value="' + esc(p.time) + '" data-act="p-f" data-i="' + i + '" data-f="time" aria-label="Period time">' +
+      '<input class="in xs" type="text" maxlength="30" placeholder="Break after" value="' + esc(p.brk || '') + '" data-act="p-f" data-i="' + i + '" data-f="brk" aria-label="Break after this period"></div></th>';
+  });
+  h += '</tr></thead><tbody>';
+  [0, 1, 2, 3, 4].forEach(function (d) {
+    h += '<tr><th scope="row" class="l">' + WDL[d] + '</th>';
+    S.periods.forEach(function (p) { h += ttCell(d, p); });
+    h += '</tr>';
+  });
+  return h + '</tbody></table></div>';
+}
+function refreshTT() { const el = $('#tt-ed'); if (el) el.innerHTML = ttEditor(); }
+
+/* ---------- export ---------- */
+function reportHTML(R) {
+  const P = S.profile, o = R.A.overall, t = R.t;
+  let h = '<article class="paper"><header><h3>Attendance &amp; marks summary</h3><p class="who"><b>' + esc(P.name || 'Student name not set') + '</b>' + (P.usn ? ' · ' + esc(P.usn) : '') + '</p><p class="meta">' + [P.sem, P.college, 'Batch ' + S.settings.batch].filter(Boolean).map(esc).join(' · ') + '<br>Counted until ' + esc(fmtDate(R.A.asOf, true)) + ' · Minimum attendance ' + t + '%</p></header>';
+  h += '<h4>Attendance by subject (hour-wise)</h4><table><thead><tr><th>Subject</th><th class="r">Held</th><th class="r">Attended</th><th class="r">%</th><th>Status</th><th>Next step</th></tr></thead><tbody>';
+  R.att.forEach(function (r) { h += '<tr><td><b>' + esc(r.s.short) + '</b> ' + esc(r.s.name) + '</td><td class="r">' + r.held + '</td><td class="r">' + r.att + '</td><td class="r"><b>' + (r.pct === null ? '-' : fp(r.pct)) + '</b></td><td class="st-' + r.status + '">' + esc(statusLabel(r.status, t)) + '</td><td>' + esc(r.advice) + '</td></tr>'; });
+  h += '<tr class="tot"><td>Overall</td><td class="r">' + o.held + '</td><td class="r">' + o.att + '</td><td class="r">' + (o.pct === null ? '-' : fp(o.pct)) + '</td><td class="st-' + o.status + '">' + esc(statusLabel(o.status, t)) + '</td><td>' + esc(advice(o, t, 'hour')) + '</td></tr></tbody></table>';
+  h += '<h4>Marks</h4><table><thead><tr><th>Subject</th><th class="r">Internal /25</th><th class="r">Assign + project /25</th><th class="r">External /50</th><th class="r">Total /100</th><th class="r">Grade point</th></tr></thead><tbody>';
+  R.marks.forEach(function (x) { const r = x.r; h += '<tr><td><b>' + esc(x.s.short) + '</b> ' + esc(x.s.name) + '</td><td class="r">' + fm(r.internal) + '</td><td class="r">' + fm(r.ap) + '</td><td class="r">' + fm(r.ext50) + '</td><td class="r"><b>' + (r.total === null ? (r.est === null ? '-' : '~' + fm(r.est)) : fm(r.total)) + '</b></td><td class="r">' + (r.total === null ? (r.est === null ? '-' : '~' + fp(r.est / 10, 2)) : fp(r.total / 10, 2)) + '</td></tr>'; });
+  h += '</tbody></table><p class="cg"><b>' + (R.cg.final !== null ? 'CGPA' : 'CGPA (projected)') + ': ' + fp(R.cg.projected, 2) + ' / 10</b></p>';
+  h += '<h4>Absences and changes</h4>';
+  if (!R.log.length) h += '<p class="muted">Nothing to list: every counted class is marked present.</p>';
+  else {
+    h += '<table><thead><tr><th>Date</th><th>Period</th><th>Subject</th><th>Detail</th></tr></thead><tbody>';
+    R.log.slice(0, 25).forEach(function (l) { h += '<tr><td>' + esc(fmtDate(l.k)) + '</td><td>' + esc(l.per) + '</td><td>' + esc(l.sub) + '</td><td>' + esc(l.note) + '</td></tr>'; });
+    h += '</tbody></table>' + (R.log.length > 25 ? '<p class="muted">' + (R.log.length - 25) + ' more rows are in the downloaded files.</p>' : '');
+  }
+  return h + '</article>';
+}
+function viewExport() {
+  const P = S.profile, fld = function (id, f, label, ph) { return '<div class="fld"><label for="' + id + '">' + label + '</label><input id="' + id + '" class="in" type="text" maxlength="80" value="' + esc(P[f]) + '" placeholder="' + esc(ph) + '" data-act="prof" data-f="' + f + '"></div>'; };
+  let h = '<div class="stack"><section class="card pad"><div class="sec-head"><h2>Semester export</h2><span class="muted small">A clean summary for review or submission</span></div>' +
+    '<div class="tg-controls">' + fld('pf-name', 'name', 'Student name', 'Your name') + fld('pf-usn', 'usn', 'USN or roll number', 'Optional') + fld('pf-sem', 'sem', 'Semester', 'Odd semester, 2026-27') + fld('pf-col', 'college', 'College', 'Optional') + '</div>' +
+    '<p class="muted small">The summary counts classes ' + (S.settings.asOf === 'end' ? 'to the end of the semester' : 'until ' + esc(fmtDate(resolveAsOf(S, TODAY), true))) + ' (change this on the Dashboard) with a ' + S.settings.threshold + '% minimum.</p>' +
+    '<div class="exp-btns"><button class="btn primary" data-act="exp-pdf">' + ic('down2') + 'Download PDF</button><button class="btn" data-act="exp-csv">' + ic('down2') + 'Download CSV (Excel)</button><button class="btn" data-act="exp-copy">' + ic('copy') + 'Copy summary</button></div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Preview</h2><span class="muted small">What the PDF contains</span></div><div id="preview" class="paper-wrap">' + reportHTML(buildReport(S, TODAY)) + '</div></section>';
+  h += '<section class="card pad"><div class="sec-head"><h2>Backup and reset</h2><span class="muted small">Your data lives in this browser only</span></div><p class="muted small">Download a backup to move your attendance, marks and timetable to another device or browser, then restore it there.</p>' +
+    '<div class="exp-btns"><button class="btn" data-act="exp-json">' + ic('down2') + 'Download backup</button><label class="btn file-btn" for="imp-file">' + ic('up2') + 'Restore backup<input id="imp-file" type="file" accept=".json,application/json" data-act="imp"></label><button class="btn danger-o" data-act="reset-all">' + ic('trash') + 'Reset everything</button></div></section></div>';
+  return h;
+}
+function refreshPreview() { const el = $('#preview'); if (el) el.innerHTML = reportHTML(buildReport(S, TODAY)); }
+async function saveFile(name, data, mime) {
+  let dl = null;
+  try { if (window.claude && typeof window.claude.use === 'function') dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+  if (dl) {
+    try { await dl.save({ filename: name, data: data }); toast('Saved ' + name); }
+    catch (e) { if (e && e.code === 'declined') return; toast('This view could not save the file. Try Copy summary instead.'); }
+    return;
+  }
+  try {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([data], { type: mime })); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+    toast('Downloading ' + name);
+  } catch (e) { toast('Downloads are blocked here. Use Copy summary instead.'); }
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); toast('Summary copied'); return; } catch (e) { /* fall through */ }
+  try {
+    const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-999px;top:0;opacity:0';
+    document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove();
+    toast(ok ? 'Summary copied' : 'Copying is blocked in this view');
+  } catch (e2) { toast('Copying is blocked in this view'); }
+}
+function fileStamp() { return TODAY; }
+
+/* ---------- views, render ---------- */
+const VIEWS = { dashboard: viewDashboard, attendance: viewAttendance, calendar: viewCalendar, marks: viewMarks, targets: viewTargets, timetable: viewTimetable, export: viewExport };
+const AFTER = { marks: refreshMarks, targets: renderTargets };
+function renderView() {
+  const v = $('#view'), ae = document.activeElement, fid = ae && ae.dataset ? ae.dataset.fid : null;
+  v.innerHTML = VIEWS[UI.tab]();
+  if (AFTER[UI.tab]) AFTER[UI.tab]();
+  if (UI.scrollTo) { const el = document.getElementById(UI.scrollTo); UI.scrollTo = null; if (el) el.scrollIntoView({ block: 'start' }); }
+  else if (fid) { const el = v.querySelector('[data-fid="' + (window.CSS && CSS.escape ? CSS.escape(fid) : fid) + '"]'); if (el) el.focus(); }
+  syncHeader();
+}
+function commit() { saveSoon(); renderView(); }
+function setTab(t, fromHash) {
+  if (!VIEWS[t]) t = 'dashboard';
+  UI.tab = t;
+  if (t === 'attendance' && !UI.attGroup) UI.attGroup = groupOf(focusDay());
+  renderView();
+  if (!fromHash) { try { if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t); } catch (e) { /* ignore */ } window.scrollTo(0, 0); }
+}
+function dayKey(el) { const d = el.closest('.de'); return d ? d.dataset.date : null; }
+
+/* ---------- event handlers ---------- */
+const H = {};
+H.tab = { click: function (el) { setTab(el.dataset.tab); } };
+H.theme = { click: function () { const t = effectiveTheme() === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', t); S.settings.theme = t; saveSoon(); syncHeader(); } };
+H.batch = { change: function (el) { S.settings.batch = el.value; commit(); } };
+H.thr = { input: function (el) { const v = parseFloat(el.value); if (isFinite(v) && v >= 1 && v <= 100) { S.settings.threshold = v; saveSoon(); renderView(); } } };
+H['modal-ok'] = { click: function () { closeModal(true); } };
+H['modal-cancel'] = { click: function () { closeModal(false); } };
+/* dashboard */
+H.asof = { change: function (el) { const a = S.settings.asOf; S.settings.asOf = el.value === 'custom' ? ((a && a !== 'today' && a !== 'end') ? a : clampKey(TODAY)) : el.value; commit(); } };
+H['asof-date'] = { change: function (el) { if (el.value) { S.settings.asOf = clampKey(el.value); commit(); } } };
+/* attendance + calendar */
+H['att-group'] = { click: function (el) { UI.attGroup = el.dataset.g; UI.openDay = ''; renderView(); } };
+H['toggle-day'] = { click: function (el) { const k = el.dataset.date; UI.openDay = UI.openDay === k ? '' : k; renderView(); } };
+H['goto-day'] = { click: function (el) { const k = el.dataset.date; UI.openDay = k; UI.attGroup = groupOf(k); UI.scrollTo = 'day-' + k; setTab('attendance'); } };
+/* day editor */
+H['d-type'] = { change: function (el) { const k = dayKey(el), o = dayOv(S, k); if (el.value === getBase(k).type) delete o.type; else o.type = el.value; delete o.code; cleanDay(S, k); commit(); } };
+H['d-label'] = { input: function (el) { const k = dayKey(el); dayOv(S, k).label = el.value; saveSoon(); const dl = document.querySelector('#day-' + k + ' .dl'); if (dl) dl.textContent = el.value || TYPES[eff(S, k).type].label; } };
+H['d-tt'] = { change: function (el) { const k = dayKey(el), o = dayOv(S, k); if (el.value === '') delete o.tt; else if (el.value === 'none') o.tt = null; else o.tt = +el.value; cleanDay(S, k); commit(); } };
+H['d-reset'] = { click: function (el) { const k = dayKey(el), o = dayOv(S, k); delete o.type; delete o.label; delete o.tt; delete o.code; cleanDay(S, k); commit(); } };
+H['d-allabs'] = { click: function (el) { markWholeDay(S, dayKey(el), false); commit(); } };
+H['d-allpres'] = { click: function (el) { markWholeDay(S, dayKey(el), true); commit(); } };
+H['d-slot-att'] = { change: function (el) { setSlotPresent(S, dayKey(el), el.dataset.pid, el.checked); commit(); } };
+H['d-slot-x'] = { change: function (el) { setSlotStatus(S, dayKey(el), el.dataset.pid, el.value); commit(); } };
+H['d-slot-sub'] = { change: function (el) { const k = dayKey(el); slotOv(S, k, el.dataset.pid).sub = el.value; commit(); } };
+H['d-event-att'] = { change: function (el) { markWholeDay(S, dayKey(el), el.checked); commit(); } };
+H['d-extra-add'] = { click: function (el) { const k = dayKey(el), sel = document.getElementById('xs-' + k); if (!sel || !sel.value) { toast('Choose the subject of the extra class first'); return; } const o = dayOv(S, k); (o.extras = o.extras || []).push({ sub: sel.value, abs: false }); commit(); } };
+H['d-extra-att'] = { change: function (el) { const k = dayKey(el), x = eff(S, k).extras[+el.dataset.i]; if (x) x.abs = !el.checked; commit(); } };
+H['d-extra-del'] = { click: function (el) { const k = dayKey(el), o = dayOv(S, k); if (o.extras) o.extras.splice(+el.dataset.i, 1); cleanDay(S, k); commit(); } };
+H['d-move'] = { click: function (el) {
+  const k = dayKey(el), inp = document.getElementById('mv-' + k), dst = inp && inp.value;
+  if (!dst || !inRange(dst)) { toast('Pick a date between ' + fmtDate(RANGE_START, true) + ' and ' + fmtDate(RANGE_END, true)); return; }
+  if (dst === k) { toast('Pick a different date'); return; }
+  moveEvent(S, k, dst); UI.openDay = dst; UI.attGroup = groupOf(dst); toast('Moved to ' + fmtDate(dst, true)); commit();
+} };
+/* marks + targets */
+H['m-in'] = {
+  input: function (el) {
+    const m = S.marks[el.dataset.sid] = S.marks[el.dataset.sid] || {}, f = el.dataset.f, max = +el.max;
+    if (el.value === '') { delete m[f]; el.classList.remove('bad'); }
+    else { const x = parseFloat(el.value); if (!isFinite(x)) return; el.classList.toggle('bad', x > max || x < 0); m[f] = clamp(x, 0, max); }
+    saveSoon(); refreshMarks();
+  },
+  change: function (el) { const x = parseFloat(el.value), max = +el.max; if (isFinite(x)) { if (x > max) el.value = max; if (x < 0) el.value = 0; } el.classList.remove('bad'); }
+};
+H['t-in'] = { input: function (el) { S.targets[el.dataset.f] = el.value; saveSoon(); renderTargets(); } };
+H['t-sel'] = { change: function (el) { S.targets[el.dataset.f] = el.value; commit(); } };
+/* timetable editor */
+H['s-f'] = { input: function (el) {
+  const id = el.closest('.sub-row').dataset.sid, s = subj(S, id), f = el.dataset.f; if (!s) return;
+  if (f === 'credits') { const v = parseFloat(el.value); s.credits = isFinite(v) && v >= 0 ? v : 1; } else s[f] = el.value;
+  saveSoon(); refreshTT();
+} };
+function moveItem(arr, i, d) { const j = i + d; if (j < 0 || j >= arr.length) return; const t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+H['s-up'] = { click: function (el) { const id = el.closest('.sub-row').dataset.sid; moveItem(S.subjects, S.subjects.findIndex(function (s) { return s.id === id; }), -1); commit(); } };
+H['s-down'] = { click: function (el) { const id = el.closest('.sub-row').dataset.sid; moveItem(S.subjects, S.subjects.findIndex(function (s) { return s.id === id; }), 1); commit(); } };
+H['s-add'] = { click: function () {
+  const id = 's' + Date.now().toString(36);
+  S.subjects.push({ id: id, short: 'NEW', code: '', name: 'New subject', faculty: '', credits: 1, color: S.subjects.length % 8 });
+  commit(); const rows = $$('.sub-row'); const last = rows[rows.length - 1]; if (last) { const inp = $('input', last); if (inp) { inp.focus(); inp.select(); } }
+} };
+H['s-del'] = { click: function (el) {
+  const id = el.closest('.sub-row').dataset.sid, s = subj(S, id); if (!s) return;
+  confirmBox({ title: 'Remove ' + s.short + '?', body: 'Its timetable slots become empty and its marks are deleted. Attendance you recorded for it disappears from the totals. This cannot be undone.', ok: 'Remove subject', danger: true }).then(function (yes) {
+    if (!yes) return;
+    S.subjects = S.subjects.filter(function (x) { return x.id !== id; }); delete S.marks[id]; commit();
+  });
+} };
+H['tt-kind'] = { change: function (el) {
+  const d = +el.dataset.day, pid = el.dataset.pid, v = el.value, old = S.tt[d][pid];
+  if (v === 'n') S.tt[d][pid] = { k: 'n', l: old && old.l || '' };
+  else if (v === 'b') S.tt[d][pid] = { k: 'b', m: {} };
+  else S.tt[d][pid] = { k: 's', s: v.slice(2) };
+  saveSoon(); refreshTT();
+} };
+H['tt-batch'] = { change: function (el) { const slot = S.tt[+el.dataset.day][el.dataset.pid]; if (slot && slot.k === 'b') { slot.m = slot.m || {}; if (el.value) slot.m[el.dataset.b] = el.value; else delete slot.m[el.dataset.b]; } saveSoon(); } };
+H['tt-label'] = { input: function (el) { const slot = S.tt[+el.dataset.day][el.dataset.pid]; if (slot && slot.k === 'n') slot.l = el.value; saveSoon(); } };
+H['p-f'] = { input: function (el) { const p = S.periods[+el.dataset.i]; if (p) p[el.dataset.f] = el.value; saveSoon(); } };
+H['p-left'] = { click: function (el) { moveItem(S.periods, +el.dataset.i, -1); saveSoon(); refreshTT(); } };
+H['p-right'] = { click: function (el) { moveItem(S.periods, +el.dataset.i, 1); saveSoon(); refreshTT(); } };
+H['p-add'] = { click: function () {
+  const id = 'p' + Date.now().toString(36);
+  S.periods.push({ id: id, label: String(S.periods.length + 1), time: '', brk: '' });
+  [0, 1, 2, 3, 4].forEach(function (d) { S.tt[d][id] = { k: 'n', l: '' }; });
+  saveSoon(); refreshTT();
+} };
+H['p-del'] = { click: function (el) {
+  const i = +el.dataset.i, p = S.periods[i]; if (!p) return;
+  if (S.periods.length <= 1) { toast('Keep at least one period'); return; }
+  confirmBox({ title: 'Remove period ' + p.label + '?', body: 'Its slot is removed from every weekday. Attendance already marked in that period stops counting.', ok: 'Remove period', danger: true }).then(function (yes) {
+    if (!yes) return;
+    S.periods.splice(i, 1); [0, 1, 2, 3, 4].forEach(function (d) { delete S.tt[d][p.id]; }); saveSoon(); refreshTT();
+  });
+} };
+H.batches = { change: function (el) {
+  const seen = {}, list = el.value.split(',').map(function (x) { return x.trim(); }).filter(function (x) { if (!x || seen[x]) return false; seen[x] = 1; return true; }).slice(0, 8);
+  if (!list.length) { toast('Keep at least one batch'); el.value = S.settings.batches.join(', '); return; }
+  S.settings.batches = list; if (list.indexOf(S.settings.batch) < 0) S.settings.batch = list[0]; commit();
+} };
+H['tt-reset'] = { click: function () {
+  confirmBox({ title: 'Restore the college timetable?', body: 'Subjects, periods, the weekly timetable and batch names go back to the defaults. Your attendance marks and entered marks are kept.', ok: 'Restore', danger: true }).then(function (yes) {
+    if (!yes) return;
+    const d = defaultState(); S.subjects = d.subjects; S.periods = d.periods; S.tt = d.tt; S.settings.batches = d.settings.batches;
+    if (S.settings.batches.indexOf(S.settings.batch) < 0) S.settings.batch = S.settings.batches[0]; commit(); toast('College timetable restored');
+  });
+} };
+/* export */
+H.prof = { input: function (el) { S.profile[el.dataset.f] = el.value; saveSoon(); refreshPreview(); } };
+H['exp-pdf'] = { click: function () { saveFile('present-summary-' + fileStamp() + '.pdf', buildPDF(S, TODAY), 'application/pdf'); } };
+H['exp-csv'] = { click: function () { saveFile('present-summary-' + fileStamp() + '.csv', reportCSV(S, TODAY), 'text/csv'); } };
+H['exp-copy'] = { click: function () { copyText(reportText(S, TODAY)); } };
+H['exp-json'] = { click: function () { saveFile('present-backup-' + fileStamp() + '.json', JSON.stringify(S, null, 1), 'application/json'); } };
+H.imp = { change: function (el) {
+  const f = el.files && el.files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = function () {
+    let s = null; try { s = sanitizeState(JSON.parse(rd.result)); } catch (e) { s = null; }
+    el.value = '';
+    if (!s) { toast('That file is not a Present backup'); return; }
+    confirmBox({ title: 'Restore this backup?', body: 'It replaces everything currently in the app on this device.', ok: 'Restore', danger: true }).then(function (yes) {
+      if (!yes) return;
+      S = s; if (S.settings.theme) document.documentElement.setAttribute('data-theme', S.settings.theme); saveNow(); UI.openDay = null; UI.attGroup = null; renderView(); toast('Backup restored');
+    });
+  };
+  rd.readAsText(f);
+} };
+H['reset-all'] = { click: function () {
+  confirmBox({ title: 'Reset everything?', body: 'This clears all attendance marks, entered marks, calendar edits and timetable changes on this device, and restores the college defaults. Download a backup first if you might want them back.', ok: 'Reset everything', danger: true }).then(function (yes) {
+    if (!yes) return;
+    const th = S.settings.theme; S = defaultState(); S.settings.theme = th; UI.openDay = null; UI.attGroup = null; saveNow(); renderView(); toast('Reset to the college defaults');
+  });
+} };
+
+function dispatch(e, type) {
+  const el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if (!el) return;
+  const h = H[el.dataset.act];
+  if (h && h[type]) h[type](el, e);
+}
+['click', 'change', 'input'].forEach(function (t) { document.addEventListener(t, function (e) { dispatch(e, t); }); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(false); });
+window.addEventListener('hashchange', function () { const t = location.hash.slice(1); if (t && t !== UI.tab && VIEWS[t]) setTab(t, true); });
+
+/* ---------- boot ---------- */
+(function boot() {
+  try { localStorage.setItem('present.probe', '1'); localStorage.removeItem('present.probe'); } catch (e) { storageOK = false; }
+  if (S.settings.theme === 'dark' || S.settings.theme === 'light') document.documentElement.setAttribute('data-theme', S.settings.theme);
+  const h0 = (location.hash || '').slice(1);
+  if (VIEWS[h0]) UI.tab = h0;
+  if (UI.tab === 'attendance') UI.attGroup = groupOf(focusDay());
+  renderView();
+})();
+
+
+
+</script>
+</body>
+</html>
+
+

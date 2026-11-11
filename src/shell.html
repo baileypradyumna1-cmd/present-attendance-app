@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Present</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/*CSS*/
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#dashboard" aria-label="Present, attendance and marks">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><path d="M9 16.5l4.8 4.8L23.5 11" fill="none" stroke="var(--accent-ink)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Present</span>
+    </a>
+    <div class="ctrls">
+      <label class="ctl"><span>Batch</span><select id="batch-sel" class="in sm" data-act="batch" aria-label="Your lab batch"></select></label>
+      <label class="ctl"><span>Minimum %</span><input id="thr" class="in sm" type="number" min="1" max="100" step="1" data-act="thr" aria-label="Minimum attendance percentage"></label>
+      <button id="theme-btn" class="btn icon" data-act="theme" type="button"></button>
+    </div>
+  </div>
+  <nav class="wrap tabs" aria-label="Sections">
+    <button type="button" data-act="tab" data-tab="dashboard">Dashboard</button>
+    <button type="button" data-act="tab" data-tab="attendance">Attendance</button>
+    <button type="button" data-act="tab" data-tab="calendar">Calendar</button>
+    <button type="button" data-act="tab" data-tab="marks">Marks</button>
+    <button type="button" data-act="tab" data-tab="targets">Targets</button>
+    <button type="button" data-act="tab" data-tab="timetable">Timetable</button>
+    <button type="button" data-act="tab" data-tab="export">Export</button>
+  </nav>
+</header>
+<main class="wrap" id="view"></main>
+<footer class="wrap foot"><span id="save-chip" class="save-chip"></span><span>Hour-wise attendance, internal marks and CGPA for your semester.</span></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal" hidden></div>
+<script>
+/*JS*/
+</script>
+</body>
+</html>
+
+

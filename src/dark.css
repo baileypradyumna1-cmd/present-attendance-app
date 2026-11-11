@@ -1,0 +1,18 @@
+    color-scheme: dark;
+    --bg: #0b1017; --surface: #131a24; --surface-2: #1d2634; --surface-3: #101722;
+    --line: #243042; --line-2: #34435a;
+    --ink: #e9eef5; --ink-2: #a8b4c5; --ink-3: #8794a8;
+    --accent: #8fa3ff; --accent-ink: #0b1017; --accent-soft: #1b2447;
+    --good-soft: #11301a;
+    --warn: #fab219; --warn-text: #f6c453; --warn-soft: #3a2d0c;
+    --bad: #d84a4a; --bad-text: #ff9090; --bad-soft: #3b1819;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 18px rgba(0, 0, 0, .3);
+    --sc0: #3987e5; --sc1: #d95926; --sc2: #199e70; --sc3: #d55181; --sc4: #9085e9; --sc5: #eda100; --sc6: #35b0e0; --sc7: #a6ab3d;
+    --ty-holiday-bg: rgba(250, 178, 25, .16); --ty-holiday-fg: #f6c968;
+    --ty-declared-bg: rgba(236, 131, 90, .18); --ty-declared-fg: #f3a583;
+    --ty-test-bg: rgba(144, 133, 233, .2); --ty-test-fg: #b9b0f5;
+    --ty-labtest-bg: rgba(232, 123, 164, .18); --ty-labtest-fg: #f2a0c0;
+    --ty-event-bg: rgba(27, 175, 122, .18); --ty-event-fg: #67d4ae;
+    --ty-info-bg: rgba(57, 135, 229, .18); --ty-info-fg: #8fbdf3;
+
+
